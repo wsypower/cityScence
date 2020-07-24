@@ -7,8 +7,7 @@
         <!-- <router-view /> -->
       </main>
       <footer>
-        <v-gloabl-nav>
-        </v-gloabl-nav>
+        <v-gloabl-nav />
       </footer>
     </div>
   </div>
