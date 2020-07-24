@@ -1,19 +1,26 @@
 <template>
   <div id="app">
-    <canvas id="canvas"></canvas>
+    <canvas id="global_canvas"></canvas>
     <div class="container">
       <header></header>
       <main>
         <!-- <router-view /> -->
       </main>
-      <footer></footer>
+      <footer>
+        <v-gloabl-nav>
+        </v-gloabl-nav>
+      </footer>
     </div>
   </div>
 </template>
 <script>
+import gloablNav from "components/nav/nav.vue";
 export default {
+  components: {
+    [gloablNav.name]: gloablNav
+  },
   mounted() {
-    var canvas = document.getElementById("canvas"),
+    var canvas = document.getElementById("global_canvas"),
       ctx = canvas.getContext("2d"),
       w = (canvas.width = 1920),
       h = (canvas.height = 1080),
@@ -113,7 +120,7 @@ export default {
       window.requestAnimationFrame(animation);
     }
 
-    animation();
+    // animation();
   }
 };
 </script>
