@@ -1,5 +1,5 @@
 import Grid from "./grid/grid";
-
+import { Scene, Arc, Gradient } from "spritejs";
 const NEON_PALETE = ["#6599ff", "#00ccff"];
 // const NEON_PALETE = [
 //   "#cb3301",
@@ -71,74 +71,63 @@ class TabControl {
     this.cols = null;
   }
   init({ target, shape }) {
-    // 获取canvas 上下文
-    this.ctx = target.getContext("2d");
+    this.initBackDom(shape);
+    const scene = new Scene({
+      container: target,
+      width: 876,
+      height: 110,
+    });
+    this.layer = scene.layer();
+    // this.clickAnimations();
+
+    // fan.remove();
+  }
+  initBackDom(shape) {
     this.ctxBackground = shape.getContext("2d");
-
-    this.w = ~~target.width;
-    this.h = ~~target.height;
+    this.w = ~~shape.width;
+    this.h = ~~shape.height;
     this._min = 0.75 * Math.min(this.w, this.h);
-
     this.rows = ~~(this.h / DEF_OPTIONS["unit_y"]) + 2;
     this.cols = ~~(this.w / DEF_OPTIONS["unit_x"]) + 2;
-
-    // let grid = new Grid(this.rows, this.cols, DEF_OPTIONS);
-    // grid.draw(this.ctxBackground);
-
-    if (!this.source) {
-      this.source = {
-        x: ~~(this.w / 2),
-        y: ~~(this.h / 2),
-      };
-    }
-    this.fillBackground("#071C32");
-
-    // this.neon();
+    let grid = new Grid(this.rows, this.cols, DEF_OPTIONS);
+    grid.draw(this.ctxBackground);
   }
-  neon() {
-    let k = (t % T_SWITCH) * f;
-    let rgb = {
-      r: ~~(wp[csi].r * (1 - k) + wp[(csi + 1) % nwp].r * k),
-      g: ~~(wp[csi].g * (1 - k) + wp[(csi + 1) % nwp].g * k),
-      b: ~~(wp[csi].b * (1 - k) + wp[(csi + 1) % nwp].b * k),
-    };
-    let rgb_str = "rgb(" + rgb.r + "," + rgb.g + "," + rgb.b + ")";
-
-    let light = this.ctx.createRadialGradient(
-      this.source.x,
-      this.source.y,
-      0,
-      this.source.x,
-      this.source.y,
-      0.875 * this._min
-    );
-    let stp =
-      0.5 -
-      0.5 * Math.sin(7 * t * f) * Math.cos(5 * t * f) * Math.sin(3 * t * f);
-
-    light.addColorStop(0, rgb_str);
-    light.addColorStop(stp, "rgba(0,0,0,.03)");
-
-    this.fillBackground("#071C32");
-    this.fillBackground(light);
-
-    t++;
-
-    if (t % T_SWITCH === 0) {
-      csi++;
-
-      if (csi === nwp) {
-        csi = 0;
-        t = 0;
-      }
-    }
-    this.request_id = requestAnimationFrame(() => {
-      this.neon();
+  async clickAnimations({ x, y }) {
+    console.log({ x, y });
+    const fan = new Arc({
+      x: x,
+      y: y,
+      radius: 50,
+      startAngle: 0,
+      endAngle: 360,
+      opacity: 0,
+      fillColor: new Gradient({
+        vector: [50, 50, 5, 50, 50, 50],
+        colors: [
+          { offset: 0, color: "rgba(0,204,255,0.6)" },
+          { offset: 0.3, color: "rgba(0,204,255,0.4)" },
+          { offset: 0.5, color: "rgba(0,204,255,0.2)" },
+          { offset: 0.7, color: "rgba(0,204,255,0.1)" },
+          { offset: 1, color: "rgba(0,204,255,0)" },
+        ],
+      }),
     });
+    this.layer.append(fan);
+    await fan.transition(0.4).attr({
+      x: x,
+      y: y,
+      scale: [1, 1],
+      opacity: 1,
+    });
+    await fan.transition(0.4).attr({
+      x: x,
+      y: y,
+      scale: [1, 1],
+      opacity: 0,
+    });
+    fan.remove();
   }
-  brightness() {
-    
-  }
+  neon() {}
   fillBackground(bg_fill) {
     this.ctx.fillStyle = bg_fill;
     this.ctx.beginPath();
@@ -147,9 +136,6 @@ class TabControl {
     this.ctx.fill();
   }
   clickLightUp() {
-    this.brightness();
-  }
-  hoverLightUp() {
     this.neon();
   }
 }

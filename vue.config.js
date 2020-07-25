@@ -43,6 +43,7 @@ module.exports = {
       alias: {
         "@": resolve("src"), // 主目录
         views: resolve("src/views"), // 页面
+        images: resolve("src/assets/images"),
         components: resolve("src/components"), // 组件
         api: resolve("src/api"), // 接口
         utils: resolve("src/utils"), // 通用功能

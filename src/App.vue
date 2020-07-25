@@ -119,7 +119,7 @@ export default {
       window.requestAnimationFrame(animation);
     }
 
-    // animation();
+    animation();
   }
 };
 </script>
@@ -144,6 +144,8 @@ body {
   width: 100%;
   height: 100%;
   position: relative;
+  background-color: rgba(7, 16, 41, 1);
+  overflow: hidden;
   .container {
     position: absolute;
     width: 100%;

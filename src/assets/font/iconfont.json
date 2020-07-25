@@ -1,0 +1,100 @@
+{
+  "id": "1961677",
+  "name": "城建大屏",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "1828867",
+      "name": "城市 (2)-01",
+      "font_class": "chengshi-",
+      "unicode": "e613",
+      "unicode_decimal": 58899
+    },
+    {
+      "icon_id": "10600008",
+      "name": "车辆报废",
+      "font_class": "cheliangbaofei",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "3045709",
+      "name": "园林绿地",
+      "font_class": "yuanlinlvdi",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "5583473",
+      "name": "防洪排涝",
+      "font_class": "fanghongpailao",
+      "unicode": "e6d9",
+      "unicode_decimal": 59097
+    },
+    {
+      "icon_id": "6723321",
+      "name": "共享",
+      "font_class": "gongxiang",
+      "unicode": "e63b",
+      "unicode_decimal": 58939
+    },
+    {
+      "icon_id": "7036074",
+      "name": "首页-选中",
+      "font_class": "shouye1-copy",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "7792931",
+      "name": "小区",
+      "font_class": "xiaoqu",
+      "unicode": "e625",
+      "unicode_decimal": 58917
+    },
+    {
+      "icon_id": "8024753",
+      "name": "污水液位",
+      "font_class": "wushuiyewei",
+      "unicode": "e641",
+      "unicode_decimal": 58945
+    },
+    {
+      "icon_id": "10396452",
+      "name": "道路",
+      "font_class": "daolu",
+      "unicode": "e618",
+      "unicode_decimal": 58904
+    },
+    {
+      "icon_id": "10894766",
+      "name": "水",
+      "font_class": "shuiziyuan",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
+      "icon_id": "13496539",
+      "name": "代办事项",
+      "font_class": "daibanshixiang",
+      "unicode": "e60f",
+      "unicode_decimal": 58895
+    },
+    {
+      "icon_id": "13580678",
+      "name": "运行",
+      "font_class": "yunhang",
+      "unicode": "e71d",
+      "unicode_decimal": 59165
+    },
+    {
+      "icon_id": "15211285",
+      "name": "管网",
+      "font_class": "guanwang",
+      "unicode": "e630",
+      "unicode_decimal": 58928
+    }
+  ]
+}
