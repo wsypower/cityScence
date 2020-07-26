@@ -81,7 +81,7 @@ class TabControl {
       fillColor: new Gradient({
         vector: [429, 58, 1, 429, 58, 300],
         colors: [
-          { offset: 0, color: "rgba(0,204,255,0.5)" },
+          { offset: 0, color: "rgba(0,204,255,0.4)" },
           { offset: 1, color: "rgba(0,204,255,0)" },
         ],
       }),
