@@ -1,6 +1,9 @@
 <template>
   <div class="nav">
-    <div id="nav__warp">
+    <div
+      id="nav__warp"
+      ref="footer"
+    >
       <div class="nav-cneter">
         <div
           class="nav__controller"
@@ -93,6 +96,9 @@ export default {
     },
     slider() {
       return this.$refs.slider;
+    },
+    footer() {
+      return this.$refs.footer;
     }
   },
   mounted() {
@@ -100,7 +106,8 @@ export default {
     NavCanvasAnimate.init({
       target: this.navScalyCanvasDom,
       shape: this.shape,
-      slider: this.slider
+      slider: this.slider,
+      footer: this.footer
     });
   },
   methods: {

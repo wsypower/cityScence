@@ -145,7 +145,7 @@ body {
   height: 100%;
   position: relative;
   background-color: rgba(7, 16, 41, 1);
-  overflow: hidden;
+  // overflow: hidden;
   .container {
     position: absolute;
     width: 100%;
