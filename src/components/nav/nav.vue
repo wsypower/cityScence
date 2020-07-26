@@ -21,10 +21,11 @@
               v-for="(item,index) in nav"
               :key="index"
               @click="clickLightUp(item.x,index)"
+              :class=" tabIndex === index?'active':'' "
             >
               <span
                 class="iconfont"
-                :class="item.icon"
+                :class="[ item.icon]"
               ></span>
               <span>{{item.value}}</span>
             </li>
@@ -47,6 +48,8 @@ export default {
   name: "v-gloabl-nav",
   data() {
     return {
+      tabIndex: 2,
+      activeClass: "active",
       nav: [
         {
           icon: "icon-daibanshixiang",
@@ -102,6 +105,7 @@ export default {
   },
   methods: {
     clickLightUp(x, index) {
+      this.tabIndex = index;
       NavCanvasAnimate.clickLightUp(x, index);
     }
     // hoverLightUp() {
@@ -165,11 +169,14 @@ export default {
           font-size: 18px;
           color: #aff1ff;
           font-weight: 550;
+          text-shadow: -1px 0px 14px #6adaffba;
         }
         .iconfont {
           font-size: 25px;
           margin-bottom: 15px;
           color: transparent;
+          text-shadow: -1px 0px 5px #6adaffba;
+
           &:before {
             background: linear-gradient(
               0deg,
@@ -177,6 +184,21 @@ export default {
               #00cdf6 56%,
               #00fdec 100%
             );
+            -webkit-background-clip: text;
+            color: transparent;
+          }
+        }
+      }
+      .active {
+        span {
+          color: #fff;
+          text-shadow: -1px 0px 14px #fff;
+        }
+        .iconfont {
+          color: #fff;
+          text-shadow: -1px 0px 5px #fff;
+          &:before {
+            background: linear-gradient(0deg, #fff 0%, #fff 56%, #fff 100%);
             -webkit-background-clip: text;
             color: transparent;
           }

@@ -157,7 +157,7 @@ body {
       width: 100%;
       height: 112px;
       flex: none;
-      background-color: red;
+      // background-color: red;
     }
     main {
       width: 100%;

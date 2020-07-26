@@ -1,24 +1,7 @@
 import Grid from "./grid/grid";
-import { Scene, Arc, Gradient } from "spritejs";
-const NEON_PALETE = ["#6599ff", "#00ccff"];
-// const NEON_PALETE = [
-//   "#cb3301",
-//   "#ff0066",
-//   "#ff6666",
-//   "#feff99",
-//   "#ffff67",
-//   "#ccff66",
-//   "#99fe00",
-//   "#fe99ff",
-//   "#ff99cb",
-//   "#fe349a",
-//   "#cc99fe",
-//   "#6599ff",
-//   "#00ccff",
-//   "#ffffff",
-// ];
+import { Scene, Arc, Gradient, Path } from "spritejs";
 
-const T_SWITCH = 150;
+const NEON_PALETE = ["#6599ff", "#00ccff"];
 
 const HEX_CRAD = 7;
 const HEX_GAP = 3;
@@ -46,12 +29,6 @@ let wp = NEON_PALETE.map((c) => {
     b: num & 0xff,
   };
 });
-
-let nwp = wp.length;
-let csi = 0;
-let f = 1 / T_SWITCH;
-let t = 0;
-
 class TabControl {
   constructor() {
     // 发光特效上下文
@@ -79,7 +56,7 @@ class TabControl {
     });
     this.layer = scene.layer();
     // this.clickAnimations();
-
+    this.breathingAnimationInit();
     // fan.remove();
   }
   initBackDom(shape) {
@@ -92,25 +69,50 @@ class TabControl {
     let grid = new Grid(this.rows, this.cols, DEF_OPTIONS);
     grid.draw(this.ctxBackground);
   }
+  // 闪动的背景
+  breathingAnimationInit() {
+    const p1 = new Path();
+    p1.attr({
+      d:
+        "M80.014,-0.000 L744.749,-0.000 C770.070,-0.000 778.549,14.982 778.549,14.982 L820.799,69.291 C820.799,69.291 825.740,75.713 820.799,81.464 C813.326,88.255 797.327,103.000 797.327,103.000 L66.712,103.000 L27.436,103.000 C27.436,103.000 14.191,90.378 3.963,81.464 C-2.735,75.170 3.963,69.291 3.963,69.291 L46.076,15.092 C46.076,15.092 54.583,-0.000 80.014,-0.000 Z",
+      scale: 1,
+      lineWidth: 12,
+      pos: [20, 5],
+      fillColor: new Gradient({
+        vector: [429, 58, 1, 429, 58, 300],
+        colors: [
+          { offset: 0, color: "rgba(0,204,255,0.5)" },
+          { offset: 1, color: "rgba(0,204,255,0)" },
+        ],
+      }),
+    });
+    this.layer.appendChild(p1);
+    p1.animate([{ opacity: 0 }, { opacity: 1 }, { opacity: 0 }], {
+      endDelay: 1000,
+      duration: 3200,
+      iterations: Infinity,
+      easing: "ease-in-out",
+    });
+  }
   async clickAnimations({ x, y }) {
-    console.log({ x, y });
     const fan = new Arc({
       x: x,
       y: y,
-      radius: 50,
+      radius: 57,
       startAngle: 0,
       endAngle: 360,
       opacity: 0,
       fillColor: new Gradient({
-        vector: [50, 50, 5, 50, 50, 50],
+        vector: [57, 57, 5, 57, 57, 57],
         colors: [
-          { offset: 0, color: "rgba(0,204,255,0.6)" },
-          { offset: 0.3, color: "rgba(0,204,255,0.4)" },
+          { offset: 0, color: "rgba(0,204,255,0.8)" },
+          { offset: 0.3, color: "rgba(0,204,255,0.6)" },
           { offset: 0.5, color: "rgba(0,204,255,0.2)" },
           { offset: 0.7, color: "rgba(0,204,255,0.1)" },
           { offset: 1, color: "rgba(0,204,255,0)" },
         ],
       }),
+      // filter: " drop-shadow(0px 0px 5px rgba(0,204,255,0.4))",
     });
     this.layer.append(fan);
     await fan.transition(0.4).attr({
@@ -127,14 +129,7 @@ class TabControl {
     });
     fan.remove();
   }
-  neon() {}
-  fillBackground(bg_fill) {
-    this.ctx.fillStyle = bg_fill;
-    this.ctx.beginPath();
-    this.ctx.rect(0, 0, this.w, this.h);
-    this.ctx.closePath();
-    this.ctx.fill();
-  }
+
   clickLightUp() {
     this.neon();
   }
