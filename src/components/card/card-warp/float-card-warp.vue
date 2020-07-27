@@ -4,8 +4,8 @@
       class="cover atvImg"
       :style="cards.style"
       @mousemove="processMovement($event)"
-      @mouseenter="processEnter($event)"
-      @mouseleave="processExit($event)"
+      @mouseenter="processEnter"
+      @mouseleave="processExit"
       ref="atvImg"
     >
       <div
@@ -20,12 +20,16 @@
         >
           <div
             class="atvImg-rendered-layer"
-            :style="{'background-image': `url(${cards.bootom})`}"
-          ></div>
+            :style="{'background-image': `url(${this.background})`}"
+            ref='render1'
+          >
+          </div>
           <div
             class="atvImg-rendered-layer"
-            :style="{'background-image': `url(${cards.top})`}"
-          ></div>
+            :style="{'background-image': `url(${this.floatBack})`}"
+            ref='render2'
+          >
+          </div>
         </div>
         <div
           class="atvImg-shine"
@@ -45,6 +49,28 @@ let bdsl = bd.scrollLeft;
 
 export default {
   name: "float-card-warp",
+  props: {
+    width: {
+      type: Number,
+      default: 400
+    },
+    height: {
+      type: Number,
+      default: 240
+    },
+    radius: {
+      type: Number,
+      default: 8
+    },
+    background: {
+      type: String,
+      default: "http://robindelaporte.fr/codepen/visa-bg.jpg"
+    },
+    floatBack: {
+      type: String,
+      default: "http://robindelaporte.fr/codepen/visa.png"
+    }
+  },
   data() {
     return {
       cards: {
@@ -57,8 +83,12 @@ export default {
     };
   },
   mounted() {
+    console.log(this.render);
     this.cards.style = {
-      transform: ` perspective(${this.cardWidth * 3}px)`
+      transform: ` perspective(${this.cardWidth * 3}px)`,
+      width: `${this.width}px`,
+      height: `${this.height}px`,
+      borderRadius: `${this.radius}px`
     };
   },
   computed: {
@@ -85,6 +115,12 @@ export default {
     },
     atvContainer() {
       return this.$refs.atvContainer;
+    },
+    render1() {
+      return this.$refs.render1;
+    },
+    render2() {
+      return this.$refs.render2;
     }
   },
 
@@ -101,7 +137,7 @@ export default {
 
       let pageX = touchEnabled ? e.touches[0].pageX : e.pageX;
       let pageY = touchEnabled ? e.touches[0].pageY : e.pageY;
-      let wMultiple = 320 / w;
+      let wMultiple = 400 / w;
       let offsetX = 0.52 - (pageX - offsets.left - bdsl) / w;
       let offsetY = 0.52 - (pageY - offsets.top - bdst) / h;
       let dy = pageY - offsets.top - bdst - h / 2;
@@ -133,13 +169,24 @@ export default {
           ") 0%,rgba(255,255,255,0) 80%)",
         transform:
           "translateX(" +
-          offsetX * totalLayers -
+          offsetX * 2 -
           0.1 +
           "px) translateY(" +
-          offsetY * totalLayers -
+          offsetY * 2 -
           0.1 +
           "px)"
       };
+      var revNum = 2;
+      let layers = [this.render1, this.render2];
+      for (var ly = 0; ly < 2; ly++) {
+        layers[ly].style.transform =
+          "translateX(" +
+          offsetX * revNum * ((ly * 2.5) / wMultiple) +
+          "px) translateY(" +
+          offsetY * totalLayers * ((ly * 2.5) / wMultiple) +
+          "px)";
+        revNum--;
+      }
     },
 
     processEnter(e) {
@@ -153,6 +200,10 @@ export default {
       );
       this.atvContainerStyle.transform = "";
       this.shine = null;
+      let layers = [this.render1, this.render2];
+      for (var ly = 0; ly < 2; ly++) {
+        layers[ly].style.transform = "";
+      }
     }
   }
 };
@@ -160,12 +211,13 @@ export default {
 
 <style lang="scss" scoped>
 .float__card {
+  cursor: pointer;
   .cover {
-    display: inline-block;
     height: 240px;
     width: 400px;
     margin: 15px;
     border-radius: 8px;
+    translate: all 0.4s;
   }
   .atvImg {
     border-radius: 8px;
