@@ -6,7 +6,7 @@
         <v-gloabl-header></v-gloabl-header>
       </header>
       <main>
-        <!-- <router-view /> -->
+        <router-view />
       </main>
       <footer>
         <v-gloabl-nav />
