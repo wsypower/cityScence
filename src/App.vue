@@ -1,8 +1,10 @@
 <template>
   <div id="app">
     <canvas id="global_canvas"></canvas>
-    <div class="container">
-      <header></header>
+    <div class="app__container">
+      <header>
+        <v-gloabl-header></v-gloabl-header>
+      </header>
       <main>
         <!-- <router-view /> -->
       </main>
@@ -14,9 +16,11 @@
 </template>
 <script>
 import gloablNav from "components/nav/nav.vue";
+import gloablHeader from "components/header/header.vue";
 export default {
   components: {
-    [gloablNav.name]: gloablNav
+    [gloablNav.name]: gloablNav,
+    [gloablHeader.name]: gloablHeader
   },
   mounted() {
     var canvas = document.getElementById("global_canvas"),
@@ -72,8 +76,8 @@ export default {
       this.orbitX = w / 2;
       this.orbitY = h / 2;
       this.timePassed = random(0, maxStars);
-      this.speed = random(this.orbitRadius) / 50000;
-      this.alpha = random(2, 10) / 10;
+      this.speed = random(this.orbitRadius) / 230000;
+      this.alpha = random(2, 10) / 12;
 
       count++;
       stars[count] = this;
@@ -144,9 +148,12 @@ body {
   width: 100%;
   height: 100%;
   position: relative;
-  background-color: rgba(7, 16, 41, 1);
-  // overflow: hidden;
-  .container {
+  background: url("~@/assets/images/bc.png") no-repeat left top;
+  overflow: hidden;
+  #global_canvas {
+    // background-color: red;
+  }
+  .app__container {
     position: absolute;
     width: 100%;
     height: 100%;
