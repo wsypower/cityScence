@@ -127,7 +127,7 @@ export default {
   }
 };
 </script>
-<style lang="scss">
+<style lang="scss" >
 @import "@/style/flex";
 @import "@/style/reset";
 html {
@@ -160,17 +160,17 @@ body {
     display: flex;
     flex-direction: column;
     top: 0px;
-    header {
+    & > header {
       width: 100%;
       height: 112px;
       flex: none;
       // background-color: red;
     }
-    main {
+    & > main {
       width: 100%;
       flex: auto;
     }
-    footer {
+    & > footer {
       width: 100%;
       height: 121px;
       flex: none;

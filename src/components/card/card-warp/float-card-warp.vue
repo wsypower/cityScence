@@ -19,7 +19,7 @@
           ref="atvImgLayers"
         >
           <div
-            class="atvImg-rendered-layer"
+            class="atvImg-rendered-layer "
             :style="{'background-image': `url(${this.background})`}"
             ref='render1'
           >
@@ -29,6 +29,7 @@
             :style="{'background-image': `url(${this.floatBack})`}"
             ref='render2'
           >
+            <slot></slot>
           </div>
         </div>
         <div
@@ -64,11 +65,11 @@ export default {
     },
     background: {
       type: String,
-      default: "http://robindelaporte.fr/codepen/visa-bg.jpg"
+      default: ""
     },
     floatBack: {
       type: String,
-      default: "http://robindelaporte.fr/codepen/visa.png"
+      default: ""
     }
   },
   data() {
@@ -83,7 +84,7 @@ export default {
     };
   },
   mounted() {
-    console.log(this.render);
+    console.log(this.width);
     this.cards.style = {
       transform: ` perspective(${this.cardWidth * 3}px)`,
       width: `${this.width}px`,
@@ -137,7 +138,7 @@ export default {
 
       let pageX = touchEnabled ? e.touches[0].pageX : e.pageX;
       let pageY = touchEnabled ? e.touches[0].pageY : e.pageY;
-      let wMultiple = 400 / w;
+      let wMultiple = this.width / w;
       let offsetX = 0.52 - (pageX - offsets.left - bdsl) / w;
       let offsetY = 0.52 - (pageY - offsets.top - bdst) / h;
       let dy = pageY - offsets.top - bdst - h / 2;
@@ -215,9 +216,7 @@ export default {
   .cover {
     height: 240px;
     width: 400px;
-    margin: 15px;
     border-radius: 8px;
-    translate: all 0.4s;
   }
   .atvImg {
     border-radius: 8px;
@@ -234,7 +233,7 @@ export default {
     position: relative;
     width: 100%;
     height: 100%;
-    border-radius: 8px;
+    border-radius: 12px;
     transition: all 0.2s ease-out;
   }
 
@@ -289,6 +288,8 @@ export default {
       rgba(255, 255, 255, 0.25) 0%,
       rgba(255, 255, 255, 0) 60%
     );
+  }
+  .url-layout {
   }
 }
 </style>
