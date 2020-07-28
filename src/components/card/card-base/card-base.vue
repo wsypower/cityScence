@@ -5,8 +5,20 @@
   >
     <div class="base">
       <header>
-        <div class="title">{{title}}</div>
-        <div class="tools"></div>
+        <div class="title">
+          <div>{{title}}</div>
+        </div>
+        <div class="tools">
+          <div
+            class="button"
+            v-for="(item,index) in buttons"
+            :key="index"
+            :class="{'active':tabIndex === index,'buttonslong':item.name.length>2}"
+            @click='buttonClickHandler(index)'
+          >
+            {{item.name}}
+          </div>
+        </div>
       </header>
       <main :style="{height:height+'px'}">
         <div class="warp">
@@ -32,6 +44,7 @@
 
 <script>
 import vueScroll from "vuescroll";
+import buttonslong from "../../../assets/images/buttonslong.png";
 export default {
   name: "vCardBase",
   props: {
@@ -47,10 +60,14 @@ export default {
     },
     height: {
       type: Number
+    },
+    buttons: {
+      type: Array
     }
   },
   data() {
     return {
+      tabIndex: 0,
       ops: {
         rail: {
           opacity: "1",
@@ -81,6 +98,11 @@ export default {
   computed: {},
   components: {
     vueScroll
+  },
+  methods: {
+    buttonClickHandler(index) {
+      this.tabIndex = index;
+    }
   }
 };
 </script>
@@ -101,8 +123,33 @@ export default {
         color: #ffffff;
         font-weight: 600;
         font-size: 18px;
+        display: flex;
+        flex-direction: row;
       }
       .tools {
+        display: flex;
+        flex-direction: row;
+        .button {
+          width: 71px;
+          height: 25px;
+          background: url("~@/assets/images/buttons.png") repeat left top;
+          color: #ffffff;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          font-size: 14px;
+          font-weight: 600;
+          margin-right: 8px;
+          cursor: pointer;
+        }
+        .active {
+          color: #0ff3f4;
+        }
+        .buttonslong {
+          width: 101px;
+          height: 25px;
+          background: url("~@/assets/images/buttonslong.png") repeat left top;
+        }
       }
     }
     main {
@@ -113,7 +160,7 @@ export default {
         border-image: linear-gradient(
             to right,
             #035063,
-            rgba(0, 205, 246, 0.8),
+            rgba(0, 205, 246, 0.9),
             #035063
           )
           10 10;
@@ -166,7 +213,7 @@ export default {
     box-shadow: inset 0px 0px 15px 6px rgba(1, 152, 199, 0.1);
   }
   50% {
-    box-shadow: inset 0px 0px 25px 6px rgba(1, 152, 199, 0.3);
+    box-shadow: inset 0px 0px 25px 6px rgba(1, 152, 199, 0.4);
   }
   100% {
     box-shadow: inset 0px 0px 15px 6px rgba(1, 152, 199, 0.1);

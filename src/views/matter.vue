@@ -5,6 +5,7 @@
       title='事项TOP5'
       :width="447"
       :height="322"
+      :buttons="matterButtons"
       scroll
     >
       <div class="ceshi">1123123</div>
@@ -27,7 +28,9 @@ export default {
     [cardBase.name]: cardBase
   },
   data() {
-    return {};
+    return {
+      matterButtons: [{ name: "本月本月" }, { name: "本月" }, { name: "本月" }]
+    };
   }
 };
 </script>
