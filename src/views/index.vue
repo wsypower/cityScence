@@ -13,16 +13,36 @@
         <div class="card">
           <header>{{item.name}}</header>
           <main>
-            <span>{{item.value}}</span>
+            <span>
+              <ICountUp
+                :delay="count.delay"
+                :endVal="item.value"
+                :options="count.options"
+              />
+            </span>
           </main>
           <footer>
             <div class="card__item">
               <span>年度累计</span>
-              <span>{{item.yearNum}}</span>
+              <span>
+                {{item.yearNum}}
+                <!-- <ICountUp
+                  :delay="count.delay"
+                  :endVal="item.yearNum"
+                  :options="count.options"
+                /> -->
+              </span>
             </div>
             <div class="card__item">
               <span>月度更新</span>
-              <span>{{item.mothNum}}</span>
+              <span>
+                {{item.mothNum}}
+                <!-- <ICountUp
+                  :delay="count.delay"
+                  :endVal="item.mothNum"
+                  :options="count.options"
+                /> -->
+              </span>
             </div>
           </footer>
         </div>
@@ -33,10 +53,13 @@
 </template>
 <script>
 import cardFloatWarp from "@/components/card/card-warp/float-card-warp.vue";
+import ICountUp from "vue-countup-v2";
+
 export default {
   name: "index",
   components: {
-    [cardFloatWarp.name]: cardFloatWarp
+    [cardFloatWarp.name]: cardFloatWarp,
+    ICountUp
   },
   data() {
     return {
@@ -49,7 +72,7 @@ export default {
           deg: 16,
           width: 390,
           height: 265,
-          url: require("@/assets/images/card1.png")
+          url: require("@/assets/images/001.png")
         },
         {
           name: "交换共享舱",
@@ -59,7 +82,7 @@ export default {
           deg: 7,
           width: 360,
           height: 225,
-          url: require("@/assets/images/card1.png")
+          url: require("@/assets/images/004.png")
         },
         {
           name: "运行监测舱",
@@ -69,7 +92,7 @@ export default {
           deg: 353,
           width: 360,
           height: 225,
-          url: require("@/assets/images/card1.png")
+          url: require("@/assets/images/003.png")
         },
         {
           name: "事项审批舱",
@@ -79,10 +102,25 @@ export default {
           deg: 344,
           width: 390,
           height: 265,
-          url: require("@/assets/images/card1.png")
+          url: require("@/assets/images/004.png")
         }
       ]
     };
+  },
+  computed: {
+    count() {
+      return {
+        delay: 800,
+        options: {
+          useEasing: true,
+          useGrouping: true,
+          separator: "",
+          decimal: ".",
+          prefix: "",
+          suffix: ""
+        }
+      };
+    }
   }
 };
 </script>
@@ -107,6 +145,17 @@ export default {
       &:hover {
         z-index: 11;
       }
+      &:nth-child(2),
+      &:nth-child(3) {
+        .card {
+          header {
+            margin-top: -5px;
+          }
+          main {
+            height: 60px;
+          }
+        }
+      }
     }
     .card {
       width: 100%;
@@ -119,10 +168,12 @@ export default {
       justify-content: center;
       align-items: center;
       text-shadow: 1px 1px 1px #060d19;
+
       header {
         color: #ffffff;
         font-size: 30px;
         width: 100%;
+        font-family: title;
       }
       main {
         height: 80px;
@@ -145,7 +196,15 @@ export default {
         font-size: 18px;
 
         .card__item {
+          font-family: title;
+          span {
+            &:first-child {
+              margin-right: 5px;
+            }
+          }
+
           &:first-child {
+            font-family: title;
             margin-right: 20px;
           }
         }

@@ -233,7 +233,7 @@ export default {
     position: relative;
     width: 100%;
     height: 100%;
-    border-radius: 12px;
+    border-radius: 8px;
     transition: all 0.2s ease-out;
   }
 
@@ -247,8 +247,21 @@ export default {
     width: 100%;
     height: 100%;
     border-radius: 8px;
-    overflow: hidden;
     transform-style: preserve-3d;
+    // border-left-color: linear-gradient(0deg, #1b3f68 0%, #2fcfff 100%);
+    //
+    position: relative;
+    &::after {
+      content: "";
+      width: calc(100% + 6px);
+      height: calc(100% + 6px);
+      position: absolute;
+      left: -3px;
+      top: -3px;
+      background-image: linear-gradient(0deg, #1b3f68 0%, #2fcfff 100%);
+      border-radius: 8px;
+      z-index: 10;
+    }
   }
 
   .atvImg-rendered-layer {
@@ -263,6 +276,7 @@ export default {
     background-size: cover;
     transition: all 0.1s ease-out;
     overflow: hidden;
+    z-index: 11;
     border-radius: 8px;
   }
 

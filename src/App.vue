@@ -160,6 +160,7 @@ body {
     display: flex;
     flex-direction: column;
     top: 0px;
+
     & > header {
       width: 100%;
       height: 112px;
@@ -177,5 +178,9 @@ body {
       // background-color: saddlebrown;
     }
   }
+}
+@font-face {
+  font-family: title;
+  src: url("~@/assets/tff/FZZZHONGHJW.TTF");
 }
 </style>

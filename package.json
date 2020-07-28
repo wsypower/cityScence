@@ -11,13 +11,23 @@
     "@types/terser-webpack-plugin": "^3.0.0",
     "autoprefixer": "^9.8.5",
     "core-js": "^3.6.5",
+    "countup.js": "^2.0.5",
     "element-ui": "^2.13.2",
     "fabric": "^3.6.3",
+    "i": "^0.3.6",
+    "install": "^0.13.0",
+    "kute.js": "^2.0.11",
     "script-ext-html-webpack-plugin": "^2.1.4",
     "terser-webpack-plugin": "^3.0.7",
     "vue": "^2.6.11",
+    "vue-countup-v2": "^4.0.0",
     "vue-router": "^3.2.0",
+    "vue-scroller": "^2.2.4",
+    "vue-seamless-scroll": "^1.1.21",
     "vue-skeleton-webpack-plugin": "^1.2.2",
+    "vue-virtual-scroller": "^1.0.10",
+    "vue2-scrollbar": "^0.0.3",
+    "vuescroll": "^4.16.1",
     "vuex": "^3.4.0",
     "webpack-bundle-analyzer": "^3.8.0"
   },
@@ -38,6 +48,7 @@
     "prettier": "^1.19.1",
     "sass-loader": "^8.0.2",
     "spritejs": "^3.7.22",
+    "vue-happy-scroll": "^2.1.1",
     "vue-template-compiler": "^2.6.11"
   }
 }
