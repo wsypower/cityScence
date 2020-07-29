@@ -12,6 +12,7 @@
     "autoprefixer": "^9.8.5",
     "core-js": "^3.6.5",
     "countup.js": "^2.0.5",
+    "echarts": "^4.8.0",
     "element-ui": "^2.13.2",
     "fabric": "^3.6.3",
     "i": "^0.3.6",
