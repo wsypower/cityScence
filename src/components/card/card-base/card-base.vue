@@ -4,9 +4,23 @@
     :style="{width:width+'px'}"
   >
     <div class="base">
-      <header>
+      <header v-if="title&&title!==''">
         <div class="title">
           <div>{{title}}</div>
+          <div
+            class="picker"
+            v-if="datepicker"
+          >
+            <el-date-picker
+              v-model="picker"
+              type="datetimerange"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期"
+              :default-time="['12:00:00']"
+              size='mini'
+            >
+            </el-date-picker>
+          </div>
         </div>
         <div class="tools">
           <div
@@ -45,9 +59,18 @@
 <script>
 import vueScroll from "vuescroll";
 import buttonslong from "../../../assets/images/buttonslong.png";
+import { DatePicker } from "element-ui";
 export default {
   name: "vCardBase",
+  components: {
+    vueScroll,
+    [DatePicker.name]: DatePicker
+  },
   props: {
+    datepicker: {
+      type: Boolean,
+      default: false
+    },
     scroll: {
       type: Boolean,
       default: false
@@ -68,6 +91,7 @@ export default {
   data() {
     return {
       tabIndex: 0,
+      picker: "",
       ops: {
         rail: {
           opacity: "1",
@@ -96,12 +120,14 @@ export default {
     };
   },
   computed: {},
-  components: {
-    vueScroll
-  },
+
   methods: {
     buttonClickHandler(index) {
-      this.tabIndex = index;
+      if (index !== this.tabIndex) {
+        this.tabIndex = index;
+        const data = this.buttons[index];
+        this.$emit("tabChangeHandler", { data, index });
+      }
     }
   }
 };
@@ -125,6 +151,12 @@ export default {
         font-size: 18px;
         display: flex;
         flex-direction: row;
+      }
+      .picker {
+        width: 190px;
+        height: 26px;
+        border-radius: 2px;
+        border: solid 1px #0ff3f4;
       }
       .tools {
         display: flex;
