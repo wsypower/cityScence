@@ -2,7 +2,7 @@
  * @Description: 
  * @Author: huacong
  * @Date: 2020-07-28 22:32:36
- * @LastEditTime: 2020-07-29 19:09:03
+ * @LastEditTime: 2020-07-29 21:17:50
  * @LastEditors: huacong
 --> 
 
@@ -18,12 +18,23 @@
           <v-pie :pieData.sync=pieData></v-pie>
         </v-card-base>
         <v-card-base
-          title='事项TOP5'
+          title='事项 TOP 5'
           :width="447"
           :height="322"
           :buttons="matterTop"
           @tabChangeHandler='matterTopChangeHandler'
         >
+          <div class="bars">
+            <v-bar
+              v-for="(item, index) in matterTopData"
+              :key="index"
+              :names.sync="item.name"
+              :value.sync="item.value"
+              :color="item.color"
+              :percentage.sync="item.percentage"
+              :index="index"
+            ></v-bar>
+          </div>
         </v-card-base>
       </v-card>
     </div>
@@ -58,13 +69,24 @@
 
         </v-card-base>
         <v-card-base
-          title='部门排列 TOP10'
+          title='部门排列 TOP 10'
           :width="447"
           :height="411"
           :buttons="department"
           @tabChangeHandler='departmentTabChange'
           scroll
         >
+          <div class="bars">
+            <v-bar
+              v-for="(item, index) in departmentData"
+              :key="index"
+              :names.sync="item.name"
+              :value.sync="item.value"
+              :color="item.color"
+              :percentage.sync="item.percentage"
+              :index="index"
+            ></v-bar>
+          </div>
         </v-card-base>
       </v-card>
     </div>
@@ -77,15 +99,35 @@ import cardBase from "@/components/card/card-base/card-base.vue";
 import card from "@/components/card/card/card.vue";
 import vPie from "@/components/chart/pie/pie.vue";
 import car from "@/components/view/car/car.vue";
+import bar from "@/components/chart/bar/bar.vue";
+import { changeBarData } from "@/utils/view";
+
 export default {
   name: "matter",
   components: {
     [cardBase.name]: cardBase,
     [card.name]: card,
     [vPie.name]: vPie,
-    [car.name]: car
+    [car.name]: car,
+    [bar.name]: bar
   },
   mounted() {},
+  computed: {
+    departmentData() {
+      return changeBarData({
+        data: this.departmentDatas,
+        colors: ["#02EAFF", "#02EAFF", "#02EAFF", "#0661EF"],
+        boundary: 3
+      });
+    },
+    matterTopData() {
+      return changeBarData({
+        data: this.matterTopDatas,
+        colors: ["#EF377E", "#FFC726", "#00BBCF"],
+        boundary: 2
+      });
+    }
+  },
   data() {
     return {
       /*=============================
@@ -98,11 +140,22 @@ export default {
         { value: 135, name: "燃气" },
         { value: 111, name: "垃圾" }
       ],
+
+      /*=============================
+      =            事项TOP5          =
+      ===============================*/
       matterTop: [
         { name: "本周" },
         { name: "本月" },
         { name: "本年" },
         { name: "累计" }
+      ],
+      matterTopDatas: [
+        { name: "燃气许可合法、延续事项", value: 233 },
+        { name: "垃圾运输许可", value: 213 },
+        { name: "移植古树名木", value: 205 },
+        { name: "占用零时绿地", value: 198 },
+        { name: "燃气许可核发", value: 168 }
       ],
       /*=============================
       =           统计分析           =
@@ -114,14 +167,29 @@ export default {
         { name: "累计" }
       ],
       statisticalData: [
-        { name: "待受理", value: 500 },
-        { name: "已受理", value: 500 },
-        { name: "已办结", value: 500 },
-        { name: "已退回", value: 500 },
-        { name: "逾期未办结", value: 500 },
-        { name: "逾期已办结", value: 500 }
+        { name: "待受理", value: 1500 },
+        { name: "已受理", value: 52500 },
+        { name: "已办结", value: 3500 },
+        { name: "已退回", value: 5500 },
+        { name: "逾期未办结", value: 70 },
+        { name: "逾期已办结", value: 120 }
       ],
+      /*=============================
+      =         部门排列TOP10         =
+      ===============================*/
       department: [{ name: "按月度受理数" }, { name: "按月度办结数" }],
+      departmentDatas: [
+        { name: "杭州市上城区城管局", value: 1500 },
+        { name: "宁波市住建局", value: 1200 },
+        { name: "温州市执法局", value: 900 },
+        { name: "湖州市城管局", value: 800 },
+        { name: "绍兴市城管局", value: 700 },
+        { name: "台州市城管局", value: 600 },
+        { name: "湖州城管局", value: 500 },
+        { name: "杭州市余杭区执法局", value: 400 },
+        { name: "杭州市西湖区城管局", value: 300 },
+        { name: "台州市住建局", value: 200 }
+      ],
       office: [{ name: "本周" }, { name: "本月" }, { name: "本年" }]
     };
   },
@@ -190,8 +258,17 @@ export default {
       flex-direction: row;
       flex-wrap: wrap;
       justify-content: space-around;
-      padding: 0 30px;
+      padding: 15px 30px;
     }
+  }
+  .bars {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0px;
   }
 }
 </style>

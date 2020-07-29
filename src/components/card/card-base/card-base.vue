@@ -243,13 +243,13 @@ export default {
 
 @keyframes box {
   0% {
-    box-shadow: inset 0px 0px 15px 6px rgba(1, 152, 199, 0.1);
+    box-shadow: inset 0px 0px 15px 6px rgba(1, 152, 199, 0.2);
   }
   50% {
-    box-shadow: inset 0px 0px 25px 6px rgba(1, 152, 199, 0.4);
+    box-shadow: inset 0px 0px 25px 6px rgba(1, 152, 199, 0.45);
   }
   100% {
-    box-shadow: inset 0px 0px 15px 6px rgba(1, 152, 199, 0.1);
+    box-shadow: inset 0px 0px 15px 6px rgba(1, 152, 199, 0.2);
   }
 }
 </style>
