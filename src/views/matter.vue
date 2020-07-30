@@ -1,8 +1,9 @@
+
 <!--
  * @Description: 
  * @Author: huacong
  * @Date: 2020-07-28 22:32:36
- * @LastEditTime: 2020-07-29 21:17:50
+ * @LastEditTime: 2020-07-30 11:47:35
  * @LastEditors: huacong
 --> 
 
@@ -47,6 +48,10 @@
         :buttons="office"
         @tabChangeHandler="officeTabChange"
       >
+        <v-line
+          :xData.sync="Object.keys(officeData)"
+          :yData.sync="Object.values(officeData)"
+        ></v-line>
       </v-card-base>
     </div>
     <div class="layout-right">
@@ -101,7 +106,7 @@ import vPie from "@/components/chart/pie/pie.vue";
 import car from "@/components/view/car/car.vue";
 import bar from "@/components/chart/bar/bar.vue";
 import { changeBarData } from "@/utils/view";
-
+import line from "@/components/chart/line/line.vue";
 export default {
   name: "matter",
   components: {
@@ -109,7 +114,8 @@ export default {
     [card.name]: card,
     [vPie.name]: vPie,
     [car.name]: car,
-    [bar.name]: bar
+    [bar.name]: bar,
+    [line.name]: line
   },
   mounted() {},
   computed: {
@@ -190,7 +196,24 @@ export default {
         { name: "杭州市西湖区城管局", value: 300 },
         { name: "台州市住建局", value: 200 }
       ],
-      office: [{ name: "本周" }, { name: "本月" }, { name: "本年" }]
+      /*=============================
+      =            办件趋势           =
+      ===============================*/
+      office: [{ name: "本周" }, { name: "本月" }, { name: "本年" }],
+      officeData: {
+        "06-06": 150,
+        "06-07": 220,
+        "06-08": 170,
+        "06-09": 180,
+        "06-10": 190,
+        "06-11": 260,
+        "06-12": 150,
+        "06-13": 160,
+        "06-14": 150,
+        "06-15": 130,
+        "06-16": 140,
+        "06-17": 120
+      }
     };
   },
   methods: {
@@ -243,6 +266,7 @@ export default {
     .center__controller {
       width: 100%;
       height: calc(100% - 212px);
+      background: url("~@/assets/images/shixiangcang.png") no-repeat center -100px;
     }
   }
   .layout-right {
