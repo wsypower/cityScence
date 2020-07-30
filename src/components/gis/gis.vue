@@ -57,6 +57,15 @@ export default {
     initGroupItem() {
       drawPath.init({ name: "wenzhou", color: "red", group: this.group });
       drawPath.init({ name: "lishui", color: "orange", group: this.group });
+      drawPath.init({ name: "tanzhou", color: "yellow", group: this.group });
+      drawPath.init({ name: "jinhua", color: "red", group: this.group });
+      drawPath.init({ name: "taizhou", color: "gray", group: this.group });
+      drawPath.init({ name: "shaoxing", color: "yellow", group: this.group });
+      drawPath.init({ name: "hangzhou", color: "green", group: this.group });
+      drawPath.init({ name: "ningbo", color: "green", group: this.group });
+      drawPath.init({ name: "jiaxing", color: "yellow", group: this.group });
+      drawPath.init({ name: "huzhou", color: "orange", group: this.group });
+      drawPath.init({ name: "zhoushan", color: "yellow", group: this.group });
     }
   }
 };

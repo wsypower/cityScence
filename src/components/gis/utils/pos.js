@@ -1,15 +1,15 @@
 const pos = {
   wenzhou: [360, 540],
   lishui: [186, 513],
-  tanzhou: [360, 540],
-  jinhua: [360, 540],
-  taizhou: [360, 540],
-  ningbo: [360, 540],
-  shaoxing: [360, 540],
-  hangzhou: [360, 540],
-  huzhou: [360, 540],
-  jiaxing: [360, 540],
-  zhoushan: [360, 540],
+  tanzhou: [54, 448],
+  jinhua: [263, 382],
+  taizhou: [470, 434],
+  ningbo: [560, 300],
+  shaoxing: [401, 322],
+  hangzhou: [112, 270],
+  huzhou: [255, 187],
+  jiaxing: [443, 197],
+  zhoushan: [740, 195],
 };
 
 export default pos;
