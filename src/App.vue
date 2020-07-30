@@ -165,16 +165,21 @@ body {
       width: 100%;
       height: 112px;
       flex: none;
+      z-index: 100;
+
       // background-color: red;
     }
     & > main {
       width: 100%;
       flex: auto;
+      z-index: 10;
     }
     & > footer {
       width: 100%;
       height: 121px;
       flex: none;
+      z-index: 100;
+
       // background-color: saddlebrown;
     }
   }

@@ -216,7 +216,7 @@ export default {
     width: 100%;
     height: 582px;
     bottom: 0px;
-    // background: url("~@/assets/images/indemain.png") no-repeat center center;
+    background: url("~@/assets/images/indemain.png") no-repeat center center;
   }
 }
 </style>

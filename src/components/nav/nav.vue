@@ -63,13 +63,13 @@ export default {
         {
           icon: "icon-gongxiang",
           value: "共享仓",
-          router: "",
+          router: "/share",
           x: 303
         },
         {
           icon: "icon-shouye1-copy",
           value: "首页",
-          router: "",
+          router: "/",
           x: 439
         },
         {
@@ -81,7 +81,7 @@ export default {
         {
           icon: "icon-daibanshixiang",
           value: "事项仓",
-          router: "",
+          router: "/matter",
           x: 704
         }
       ]
@@ -114,6 +114,7 @@ export default {
     clickLightUp(x, index) {
       this.tabIndex = index;
       NavCanvasAnimate.clickLightUp(x, index);
+      this.nav[index].router && this.$router.push(this.nav[index].router);
     }
     // hoverLightUp() {
     //   NavCanvasAnimate.hoverLightUp();
