@@ -3,11 +3,13 @@
     class="gis"
     ref="gis"
   >
+
   </div>
 </template>
 
 <script>
-import { Scene, Group, Path } from "spritejs";
+import { Scene, Group, Path, Gradient } from "spritejs";
+import drawPath from "./index";
 export default {
   name: "vGis",
   computed: {
@@ -47,9 +49,14 @@ export default {
         width: this.w,
         height: this.h,
         pos: [0, 0],
-        bgcolor: "#cec"
+        filter: "drop-shadow(0, 0, 25,#318BCD)"
       });
       this.layer.append(this.group);
+      this.initGroupItem();
+    },
+    initGroupItem() {
+      drawPath.init({ name: "wenzhou", color: "red", group: this.group });
+      drawPath.init({ name: "lishui", color: "orange", group: this.group });
     }
   }
 };
