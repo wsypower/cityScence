@@ -160,25 +160,27 @@ body {
     display: flex;
     flex-direction: column;
     top: 0px;
-
     & > header {
       width: 100%;
       height: 112px;
       flex: none;
       z-index: 100;
-
+      position: absolute;
+      top: 0px;
       // background-color: red;
     }
     & > main {
       width: 100%;
-      flex: auto;
+      height: 100%;
       z-index: 10;
     }
     & > footer {
+      position: absolute;
       width: 100%;
       height: 121px;
       flex: none;
       z-index: 100;
+      bottom: 0px;
 
       // background-color: saddlebrown;
     }

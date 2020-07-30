@@ -247,7 +247,7 @@ export default {
   height: 100%;
   display: flex;
   flex-direction: row;
-  padding: 0 30px;
+  padding: 112px 30px 121px 30px;
   justify-content: space-between;
   .layout-left {
     height: 100%;

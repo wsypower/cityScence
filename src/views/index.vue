@@ -132,6 +132,8 @@ export default {
   position: relative;
   display: flex;
   justify-content: center;
+  padding-top: 112px;
+  padding-bottom: 121px;
   .card__containr {
     width: 100%;
     height: 396px;
@@ -215,7 +217,7 @@ export default {
     position: absolute;
     width: 100%;
     height: 582px;
-    bottom: 0px;
+    bottom: 121px;
     background: url("~@/assets/images/indemain.png") no-repeat center center;
   }
 }

@@ -1,12 +1,9 @@
 <template>
-  <div
-    class="share"
-    :style="{width:windoW,height:windoH}"
-  >
+  <div class="share">
     <div class="map__gis">
-      <!-- <div class="gis">
+      <div class="gis">
         <v-gis></v-gis>
-      </div> -->
+      </div>
     </div>
   </div>
 </template>
@@ -19,14 +16,7 @@ export default {
     [gis.name]: gis
   },
   mounted() {},
-  computed: {
-    windoW() {
-      return document.getElementById("app").clientWidth;
-    },
-    windoH() {
-      return document.getElementById("app").clientHeight;
-    }
-  }
+  computed: {}
 };
 </script>
 
@@ -34,6 +24,8 @@ export default {
 .share {
   width: 100%;
   height: 100%;
+  padding: 112px 121px;
+  background: url("~@/assets/images/share.png") no-repeat;
   .map__gis {
     width: 100%;
     height: 100%;
