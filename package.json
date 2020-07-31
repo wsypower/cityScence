@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@types/terser-webpack-plugin": "^3.0.0",
+    "ant-design-vue": "^1.6.4",
     "autoprefixer": "^9.8.5",
     "core-js": "^3.6.5",
     "countup.js": "^2.0.5",

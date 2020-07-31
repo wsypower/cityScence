@@ -1,4 +1,5 @@
 import { Gradient } from "spritejs";
+
 const ColorsGradient = {
   red: new Gradient({
     vector: [160, 120, 80, 160, 120, 330],

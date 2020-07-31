@@ -9,7 +9,9 @@
 
 <script>
 import { Scene, Group, Path, Gradient } from "spritejs";
-import drawPath from "./index";
+import drawPath from "./drawPath.js";
+import Draw from "./draw";
+import drawOut from "./draw-outline.js";
 export default {
   name: "vGis",
   computed: {
@@ -27,7 +29,21 @@ export default {
     return {
       scene: null,
       layer: null,
-      group: null
+      group: null,
+      area: [
+        { name: "wenzhou", color: "red" },
+        { name: "wenzhou", color: "red" },
+        { name: "lishui", color: "orange" },
+        { name: "tanzhou", color: "yellow" },
+        { name: "jinhua", color: "red" },
+        { name: "taizhou", color: "gray" },
+        { name: "shaoxing", color: "yellow" },
+        { name: "hangzhou", color: "green" },
+        { name: "ningbo", color: "green" },
+        { name: "jiaxing", color: "orange" },
+        { name: "huzhou", color: "yellow" },
+        { name: "zhoushan", color: "yellow" }
+      ]
     };
   },
   mounted() {
@@ -48,24 +64,17 @@ export default {
       this.group.attr({
         width: this.w,
         height: this.h,
-        pos: [0, 0],
-        filter: "drop-shadow(0, 0, 25,#318BCD)"
+        pos: [0, 0]
       });
       this.layer.append(this.group);
+      drawOut.init({ Group: this.group });
       this.initGroupItem();
     },
     initGroupItem() {
-      drawPath.init({ name: "wenzhou", color: "red", group: this.group });
-      drawPath.init({ name: "lishui", color: "orange", group: this.group });
-      drawPath.init({ name: "tanzhou", color: "yellow", group: this.group });
-      drawPath.init({ name: "jinhua", color: "red", group: this.group });
-      drawPath.init({ name: "taizhou", color: "gray", group: this.group });
-      drawPath.init({ name: "shaoxing", color: "yellow", group: this.group });
-      drawPath.init({ name: "hangzhou", color: "green", group: this.group });
-      drawPath.init({ name: "ningbo", color: "green", group: this.group });
-      drawPath.init({ name: "jiaxing", color: "yellow", group: this.group });
-      drawPath.init({ name: "huzhou", color: "orange", group: this.group });
-      drawPath.init({ name: "zhoushan", color: "yellow", group: this.group });
+      const group = this.group;
+      this.area.forEach(are => {
+        drawPath.init({ ...are, group });
+      });
     }
   }
 };
