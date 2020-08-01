@@ -1,5 +1,10 @@
 <template>
   <div class="share">
+    <!-- 装饰性的 -->
+    <div class="wing">
+      <div class="wing__left"></div>
+      <div class="wing__right"></div>
+    </div>
     <div class="map__gis">
       <div class="layout__left">
         <div class="left__slider">
@@ -47,15 +52,17 @@
               ></v-share-bar>
             </v-card-base>
             <v-card-base
-              title='预警列表'
+              title='指数排名'
               :width="290"
               :height="382"
             >
+              <v-share-line :lineData="indexRanking"></v-share-line>
             </v-card-base>
           </v-card>
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -67,6 +74,8 @@ import vRadio from "@/components/radio/radio-list.vue";
 import levelVue from "../components/level/level.vue";
 import vShareBar from "@/components/view/share/bar.vue";
 import { changeBarData } from "@/utils/view";
+import shareLineVue from "../components/chart/line/share-line.vue";
+import Object from "spritejs";
 export default {
   name: "share",
   components: {
@@ -75,7 +84,8 @@ export default {
     [cardBase.name]: cardBase,
     [vRadio.name]: vRadio,
     [levelVue.name]: levelVue,
-    [vShareBar.name]: vShareBar
+    [vShareBar.name]: vShareBar,
+    [shareLineVue.name]: shareLineVue
   },
   mounted() {},
   computed: {
@@ -124,6 +134,19 @@ export default {
         { name: "jiaxing", color: "orange" },
         { name: "huzhou", color: "yellow" },
         { name: "zhoushan", color: "yellow" }
+      ],
+      indexRanking: [
+        { name: "杭州市", value: 1500 },
+        { name: "宁波市", value: 1200 },
+        { name: "温州市", value: 900 },
+        { name: "台州市", value: 800 },
+        { name: "绍兴市", value: 700 },
+        { name: "嘉兴市", value: 600 },
+        { name: "丽水市", value: 500 },
+        { name: "衢州市", value: 400 },
+        { name: "湖州市", value: 400 },
+        { name: "舟山市", value: 400 },
+        { name: "金华市", value: 400 }
       ]
     };
   },
@@ -167,6 +190,7 @@ export default {
   height: 100%;
   padding: 112px 0px;
   background: url("~@/assets/images/share.png") no-repeat;
+  position: relative;
   .map__gis {
     width: 100%;
     height: 100%;
@@ -174,6 +198,7 @@ export default {
     flex-direction: row;
     justify-content: center;
     align-items: center;
+    z-index: 18;
     .gis {
       width: 961px;
       height: 100%;
@@ -185,6 +210,8 @@ export default {
       display: flex;
       align-items: center;
       padding-left: 30px;
+      transform: perspective(1200px) rotateY(10deg);
+      transform-style: preserve-3d;
       .left__slider {
         width: 302px;
         height: 577px;
@@ -203,18 +230,43 @@ export default {
       }
     }
     .layout__right {
+      position: relative;
+      top: -30px;
       display: flex;
       flex: auto;
       height: 100%;
       display: flex;
-      align-items: center;
       flex-direction: row-reverse;
       padding-right: 30px;
-
+      transform: perspective(1200px) rotateY(350deg);
+      transform-style: preserve-3d;
       .right__slider {
         width: 328px;
         height: 100%;
       }
+    }
+  }
+  .wing {
+    width: 1161px;
+    height: 641px;
+    position: absolute;
+    top: 264px;
+    left: 350px;
+    .wing__left {
+      width: 191px;
+      height: 574px;
+      background: url("~@/assets/images/wing-left.png");
+      position: absolute;
+      top: 0px;
+      left: 0px;
+    }
+    .wing__right {
+      width: 191px;
+      height: 574px;
+      background: url("~@/assets/images/wing-right.png");
+      position: absolute;
+      top: 0px;
+      right: 0px;
     }
   }
 }
