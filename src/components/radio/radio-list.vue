@@ -29,6 +29,7 @@
 <script>
 import { Radio } from "ant-design-vue";
 import "ant-design-vue/dist/antd.css";
+
 import { wrap } from "spritejs";
 
 export default {

@@ -214,6 +214,7 @@ export default {
           border-image: linear-gradient(to top, #009dff, #00cdf6, #00fdec) 1 1
             10 10;
           border-right-width: 0px;
+          box-sizing: content-box;
         }
         &::after {
           content: "";
@@ -227,6 +228,7 @@ export default {
           border-image: linear-gradient(to top, #009dff, #00cdf6, #00fdec) 1 1
             10 10;
           border-left-width: 0px;
+          box-sizing: content-box;
         }
         .container {
           width: 100%;

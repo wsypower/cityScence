@@ -25,29 +25,49 @@ export default {
       return this.$refs.gis.offsetHeight;
     }
   },
+  props: {
+    area: {
+      type: Array,
+      default: () => {
+        return [
+          { name: "wenzhou", color: "red" },
+          { name: "wenzhou", color: "red" },
+          { name: "lishui", color: "orange" },
+          { name: "tanzhou", color: "yellow" },
+          { name: "jinhua", color: "red" },
+          { name: "taizhou", color: "gray" },
+          { name: "shaoxing", color: "yellow" },
+          { name: "hangzhou", color: "green" },
+          { name: "ningbo", color: "green" },
+          { name: "jiaxing", color: "orange" },
+          { name: "huzhou", color: "yellow" },
+          { name: "zhoushan", color: "yellow" }
+        ];
+      }
+    }
+  },
   data() {
     return {
       scene: null,
       layer: null,
       group: null,
-      area: [
-        { name: "wenzhou", color: "red" },
-        { name: "wenzhou", color: "red" },
-        { name: "lishui", color: "orange" },
-        { name: "tanzhou", color: "yellow" },
-        { name: "jinhua", color: "red" },
-        { name: "taizhou", color: "gray" },
-        { name: "shaoxing", color: "yellow" },
-        { name: "hangzhou", color: "green" },
-        { name: "ningbo", color: "green" },
-        { name: "jiaxing", color: "orange" },
-        { name: "huzhou", color: "yellow" },
-        { name: "zhoushan", color: "yellow" }
-      ]
+      pathGroup: null,
+      path: []
     };
+  },
+  watch: {
+    area: {
+      deep: true,
+      handler(newValue, oldValue) {
+        this.path.forEach((item, i) => {
+          item.update(newValue[i]);
+        });
+      }
+    }
   },
   mounted() {
     this.initLayer();
+    this.initGroupItem();
   },
   methods: {
     initLayer() {
@@ -58,6 +78,7 @@ export default {
       });
       this.layer = this.scene.layer();
       this.group = new Group();
+      this.pathGroup = new Group();
       this.initGroup();
     },
     initGroup() {
@@ -66,14 +87,21 @@ export default {
         height: this.h,
         pos: [0, 0]
       });
+      this.pathGroup.attr({
+        width: this.w,
+        height: this.h,
+        pos: [0, 0]
+      });
       this.layer.append(this.group);
+      this.layer.append(this.pathGroup);
       drawOut.init({ Group: this.group });
-      this.initGroupItem();
     },
     initGroupItem() {
-      const group = this.group;
+      const group = this.pathGroup;
       this.area.forEach(are => {
-        drawPath.init({ ...are, group });
+        const path = new drawPath();
+        const drow = path.init({ ...are, group });
+        this.path.push(drow);
       });
     }
   }

@@ -25,11 +25,34 @@
         </div>
       </div>
       <div class="gis">
-        <v-gis></v-gis>
+        <v-gis :area.sync='area'></v-gis>
       </div>
       <div class="layout__right">
         <div class="right__slider">
-          <v-card :height="858"></v-card>
+          <v-card :height="858">
+            <v-card-base
+              title='预警列表'
+              :width="290"
+              :height="323"
+              scroll
+            >
+              <v-share-bar
+                v-for="(item, index) in waringList"
+                :key="index"
+                :percentage='item.percentage'
+                :index="index+1"
+                :value='item.value'
+                :names="item.name"
+                :color='item.color'
+              ></v-share-bar>
+            </v-card-base>
+            <v-card-base
+              title='预警列表'
+              :width="290"
+              :height="382"
+            >
+            </v-card-base>
+          </v-card>
         </div>
       </div>
     </div>
@@ -42,6 +65,8 @@ import card from "@/components/card/card/card.vue";
 import cardBase from "@/components/card/card-base/card-base.vue";
 import vRadio from "@/components/radio/radio-list.vue";
 import levelVue from "../components/level/level.vue";
+import vShareBar from "@/components/view/share/bar.vue";
+import { changeBarData } from "@/utils/view";
 export default {
   name: "share",
   components: {
@@ -49,9 +74,19 @@ export default {
     [card.name]: card,
     [cardBase.name]: cardBase,
     [vRadio.name]: vRadio,
-    [levelVue.name]: levelVue
+    [levelVue.name]: levelVue,
+    [vShareBar.name]: vShareBar
   },
   mounted() {},
+  computed: {
+    waringList() {
+      return changeBarData({
+        data: this.warningDatas,
+        colors: ["#E2111B", "#FF8400", "#FFEA00", "#02EAFF"],
+        boundary: 3
+      });
+    }
+  },
   data() {
     return {
       router: "share",
@@ -65,13 +100,62 @@ export default {
             name: "城市污水监督性检测达标图层"
           }
         ]
-      }
+      },
+      // 预警列表
+      warningDatas: [
+        { name: "杭州市", value: 1500 },
+        { name: "宁波市", value: 1200 },
+        { name: "温州市", value: 900 },
+        { name: "台州市", value: 800 },
+        { name: "绍兴市", value: 700 },
+        { name: "嘉兴市", value: 600 },
+        { name: "金华市", value: 500 },
+        { name: "丽水市", value: 400 }
+      ],
+      area: [
+        { name: "wenzhou", color: "red" },
+        { name: "lishui", color: "orange" },
+        { name: "tanzhou", color: "yellow" },
+        { name: "jinhua", color: "red" },
+        { name: "taizhou", color: "gray" },
+        { name: "shaoxing", color: "yellow" },
+        { name: "hangzhou", color: "green" },
+        { name: "ningbo", color: "green" },
+        { name: "jiaxing", color: "orange" },
+        { name: "huzhou", color: "yellow" },
+        { name: "zhoushan", color: "yellow" }
+      ]
     };
   },
-  computed: {},
   methods: {
     shareRadioChaneg(e) {
       console.log(e);
+      if (e === 2) {
+        this.area = [
+          { name: "wenzhou", color: "yellow" },
+          { name: "lishui", color: "orange" },
+          { name: "tanzhou", color: "yellow" },
+          { name: "jinhua", color: "red" },
+          { name: "taizhou", color: "gray" },
+          { name: "shaoxing", color: "yellow" },
+          { name: "hangzhou", color: "green" },
+          { name: "ningbo", color: "green" },
+          { name: "jiaxing", color: "orange" },
+          { name: "huzhou", color: "yellow" },
+          { name: "zhoushan", color: "yellow" }
+        ];
+
+        this.warningDatas = [
+          { name: "宁波市", value: 1200 },
+          { name: "温州市", value: 900 },
+          { name: "台州市", value: 800 },
+          { name: "杭州市", value: 1500 },
+          { name: "绍兴市", value: 700 },
+          { name: "嘉兴市", value: 600 },
+          { name: "金华市", value: 500 },
+          { name: "丽水市", value: 400 }
+        ];
+      }
     }
   }
 };
@@ -126,9 +210,10 @@ export default {
       align-items: center;
       flex-direction: row-reverse;
       padding-right: 30px;
+
       .right__slider {
         width: 328px;
-        height: 831px;
+        height: 100%;
       }
     }
   }

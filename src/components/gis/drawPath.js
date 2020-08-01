@@ -1,4 +1,4 @@
-import { Path, Label } from "spritejs";
+import { Path, Label, Gradient } from "spritejs";
 import ColorsGradient from "@/components/gis/utils/Gradient";
 import texture from "@/components/gis/utils/texture.js";
 import path from "@/components/gis/utils/path";
@@ -40,6 +40,7 @@ class drawPath {
     this.draw();
     this.text();
     this.append(this.p1, this.p2, this.text1, this.text2);
+    return this;
   }
   draw() {
     const d = this.path;
@@ -52,7 +53,7 @@ class drawPath {
       d: d,
       fillColor: "rgba(6,13,25,1)",
       pos: pos,
-      texture: texture,
+      texture: this.name === "舟山" ? "" : texture,
       textureRect: [0, 0],
       filter: "drop-shadow(-1, 1, 15, rgba(255,255,255,0.7))",
       zIndex: 1,
@@ -65,14 +66,6 @@ class drawPath {
       lineWidth: 3,
       zIndex: 1,
     });
-    if (this.name === "舟山") {
-      console.log(this.p1);
-      this.p1.attr({
-        normalize: false,
-        texture: "",
-        // textureRect: [0, 100],
-      });
-    }
   }
   text() {
     const name = this.name;
@@ -119,7 +112,7 @@ class drawPath {
     this.text1.attr({
       pos: pos,
       fillColor: "#0A2246",
-      font: "600  24px 'PingFang-SC-Heavy'",
+      font: "600  23px 'PingFang-SC-Heavy'",
       zIndex: 4,
       filter: "drop-shadow(1, 1, 0, rgba(255,255,255,1))",
     });
@@ -128,7 +121,7 @@ class drawPath {
       fillColor: "#fff",
       strokeWidth: 3,
       strokeColor: "#fff",
-      font: "600  24px 'PingFang-SC-Heavy'",
+      font: "600  23px 'PingFang-SC-Heavy'",
       zIndex: 3,
       filter: "drop-shadow(-1, -1, 0, rgba(255,255,255,1))",
     });
@@ -138,6 +131,27 @@ class drawPath {
       this.group.append(item);
     });
   }
+  update({ color }) {
+    // console.log(color);
+    // this.Gradient = ColorsGradient[color];
+    // this.texture = texture[color];
+    // let Gradients = this.Gradient;
+    // let texture = this.texture;
+    // if (this.name === "温州") {
+    //   console.log(this);
+    // }
+    // console.log(this.name)
+    // this.p1.update();
+    // this.p2.update();
+    if (this.name !== "舟山") {
+      this.p1.transition(0).attr({
+        texture: texture[color],
+      });
+    }
+    this.p2.transition(0).attr({
+      fillColor: ColorsGradient[color],
+    });
+  }
 }
 
-export default new drawPath();
+export default drawPath;
