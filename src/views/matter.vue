@@ -47,6 +47,7 @@
         :height="212"
         :buttons="office"
         @tabChangeHandler="officeTabChange"
+        v-if='officeData'
       >
         <v-line
           :xData.sync="Object.keys(officeData)"
@@ -107,6 +108,15 @@ import car from "@/components/view/car/car.vue";
 import bar from "@/components/chart/bar/bar.vue";
 import { changeBarData } from "@/utils/view";
 import line from "@/components/chart/line/line.vue";
+import {
+  getTjsxfl,
+  getZhsj,
+  getTjfx,
+  getSxTop5,
+  getBjqs,
+  getBmplTop10
+} from "../api/matter";
+
 export default {
   name: "matter",
   components: {
@@ -117,7 +127,20 @@ export default {
     [bar.name]: bar,
     [line.name]: line
   },
-  mounted() {},
+  mounted() {
+    this._getTjsxfl();
+    this._getTjfx();
+    this._getSxTop5();
+    this._getBmplTop10();
+    this._getBjqs();
+  },
+  activated() {
+    this._getTjsxfl();
+    this._getTjfx();
+    this._getSxTop5();
+    this._getBmplTop10();
+    this._getBjqs();
+  },
   computed: {
     departmentData() {
       return changeBarData({
@@ -150,6 +173,7 @@ export default {
       /*=============================
       =            事项TOP5          =
       ===============================*/
+      matterTopIndex: 0,
       matterTop: [
         { name: "本周" },
         { name: "本月" },
@@ -166,54 +190,40 @@ export default {
       /*=============================
       =           统计分析           =
       ===============================*/
+      statisticalIndex: 0,
       statistical: [
         { name: "今天" },
         { name: "本月" },
         { name: "本年" },
         { name: "累计" }
       ],
-      statisticalData: [
-        { name: "待受理", value: 1500 },
-        { name: "已受理", value: 52500 },
-        { name: "已办结", value: 3500 },
-        { name: "已退回", value: 5500 },
-        { name: "逾期未办结", value: 70 },
-        { name: "逾期已办结", value: 120 }
-      ],
+      statisticalData: [],
       /*=============================
       =         部门排列TOP10         =
       ===============================*/
       department: [{ name: "按月度受理数" }, { name: "按月度办结数" }],
-      departmentDatas: [
-        { name: "杭州市上城区城管局", value: 1500 },
-        { name: "宁波市住建局", value: 1200 },
-        { name: "温州市执法局", value: 900 },
-        { name: "湖州市城管局", value: 800 },
-        { name: "绍兴市城管局", value: 700 },
-        { name: "台州市城管局", value: 600 },
-        { name: "湖州城管局", value: 500 },
-        { name: "杭州市余杭区执法局", value: 400 },
-        { name: "杭州市西湖区城管局", value: 300 },
-        { name: "台州市住建局", value: 200 }
-      ],
+      departmentDatasIndex: 0,
+      departmentDatas: [],
       /*=============================
       =            办件趋势           =
       ===============================*/
       office: [{ name: "本周" }, { name: "本月" }, { name: "本年" }],
-      officeData: {
-        "06-06": 150,
-        "06-07": 220,
-        "06-08": 170,
-        "06-09": 180,
-        "06-10": 190,
-        "06-11": 260,
-        "06-12": 150,
-        "06-13": 160,
-        "06-14": 150,
-        "06-15": 130,
-        "06-16": 140,
-        "06-17": 120
-      }
+      officeDataIndex: 0,
+      officeData: null
+      // officeData: {
+      //   "06-06": 150,
+      //   "06-07": 220,
+      //   "06-08": 170,
+      //   "06-09": 180,
+      //   "06-10": 190,
+      //   "06-11": 260,
+      //   "06-12": 150,
+      //   "06-13": 160,
+      //   "06-14": 150,
+      //   "06-15": 130,
+      //   "06-16": 140,
+      //   "06-17": 120
+      // },
     };
   },
   methods: {
@@ -222,20 +232,114 @@ export default {
      * 时间top 选项卡回调
      */
     matterTopChangeHandler(data) {
-      console.log(data);
+      this.matterTopIndex = data.index === 3 ? "" : data.index;
+      this._getSxTop5();
     },
     /**
      * @description
      * 部门排列TOP10 选项卡回调
      */
     departmentTabChange(data) {
-      console.log(data);
+      this.departmentDatasIndex = data.index === 3 ? "" : data.index;
+      this._getBmplTop10();
     },
     statisticalTabChange(data) {
-      console.log(data);
+      this.statisticalIndex = data.index === 3 ? "" : data.index;
+      this._getTjfx();
     },
     officeTabChange(data) {
-      console.log(data);
+      this.officeDataIndex = data.index === 3 ? "" : data.index;
+      this._getBjqs();
+    },
+    /* 异步接口 */
+    _getTjsxfl() {
+      return getTjsxfl()
+        .then(res => {
+          this.pieData = res.sxfl.map(v => {
+            return {
+              value: ~~v["count"].slice(0, -1),
+              name: v["name"],
+              per: v["per"].slice(0, -1)
+            };
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    _getZhsj() {
+      return getZhsj()
+        .then(res => {})
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    _getTjfx() {
+      const map = {
+        dsl: "待受理",
+        bysl: "不予受理",
+        ysl: "已受理",
+        ybj: "已办结",
+        wbj: "未办结",
+        bqbz: "补齐补正"
+      };
+      return getTjfx({ type: this.statisticalIndex })
+        .then(res => {
+          this.statisticalData = [
+            { name: map["dsl"], value: ~~res["dsl"] },
+            { name: map["ysl"], value: ~~res["ysl"] },
+            { name: map["bysl"], value: ~~res["dsbysll"] },
+            { name: map["ybj"], value: ~~res["ybj"] },
+            { name: map["wbj"], value: ~~res["wbj"] },
+            { name: map["bqbz"], value: ~~res["bqbz"] }
+          ];
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    _getSxTop5() {
+      return getSxTop5({ type: this.matterTopIndex })
+        .then(res => {
+          this.matterTopDatas = res.map(item => {
+            return {
+              name:
+                item["name"].length > 20
+                  ? item["name"].slice(0, 20) + "..."
+                  : item["name"],
+              value: ~~item["count"]
+            };
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    _getBjqs() {
+      return getBjqs({ type: this.officeDataIndex })
+        .then(res => {
+          console.log(res);
+          this.officeData = res.reduce((acc, val) => {
+            const k =
+              this.officeDataIndex !== 2 ? val["date"].slice(5) : val["date"];
+            acc[k] = val["count"];
+            return acc;
+          }, {});
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    _getBmplTop10() {
+      return getBmplTop10({ type: this.departmentDatasIndex })
+        .then(res => {
+          this.departmentDatas = res.map(item => {
+            return { name: item["deptname"], value: ~~item["count"] };
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 };

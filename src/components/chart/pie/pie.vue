@@ -29,13 +29,13 @@
           <div class="percentage">
             <ICountUp
               :delay="count.delay"
-              :endVal="~~(item.value/total*100)"
+              :endVal="~~item.per"
               :options="count.options"
             />%</div>
           <div class="nums">
             <ICountUp
               :delay="count.delay"
-              :endVal="item.value"
+              :endVal="~~item.value"
               :options="count.options"
             />项</div>
         </div>

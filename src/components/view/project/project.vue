@@ -25,32 +25,34 @@
           <div class="item-value">建成量</div>
           <div class="item-percentage">建成率</div>
         </div>
-        <div
-          class="table-item"
-          v-for="(item, index) in completionRate"
-          :key="index"
-        >
-          <div class="item-header">
-            <div class="item-index">
-              {{index+1}}
+        <!-- <fade-transition> -->
+          <div
+            class="table-item"
+            v-for="(item, index) in completionRate"
+            :key="index"
+          >
+            <div class="item-header">
+              <div class="item-index">
+                {{index+1}}
+              </div>
+            </div>
+            <div class="item-city">{{item.name}}</div>
+            <div class="item-value">
+              <ICountUp
+                :delay="count.delay"
+                :endVal="item.value"
+                :options="count.options"
+              />
+            </div>
+            <div class="item-percentage">
+              <ICountUp
+                :delay="count.delay"
+                :endVal="item.percentage"
+                :options="count.options"
+              />%
             </div>
           </div>
-          <div class="item-city">{{item.name}}</div>
-          <div class="item-value">
-            <ICountUp
-              :delay="count.delay"
-              :endVal="item.value"
-              :options="count.options"
-            />
-          </div>
-          <div class="item-percentage">
-            <ICountUp
-              :delay="count.delay"
-              :endVal="item.percentage"
-              :options="count.options"
-            />%
-          </div>
-        </div>
+        <!-- </fade-transition> -->
       </div>
     </main>
   </div>
@@ -58,6 +60,7 @@
 
 <script>
 import ICountUp from "vue-countup-v2";
+import { FadeTransition } from "vue2-transitions";
 export default {
   name: "vProject",
   props: {
@@ -69,7 +72,8 @@ export default {
     }
   },
   components: {
-    ICountUp
+    ICountUp,
+    FadeTransition
   },
   computed: {
     count() {

@@ -18,9 +18,9 @@ export default {
     this.init();
   },
   computed: {
-    xData() {
-      return;
-    }
+    // xData() {
+    //   return;
+    // }
   },
   props: {
     xData: {
@@ -36,8 +36,8 @@ export default {
       options: {
         grid: {
           top: "15",
-          left: "35",
-          right: "30",
+          left: "40",
+          right: "50",
           bottom: "15",
           containLabel: true
         },
@@ -165,6 +165,24 @@ export default {
   computed: {
     line() {
       return this.$refs.line;
+    }
+  },
+  watch: {
+    xData(newValue, oldValue) {
+      this.lineChart.setOption({
+        xAxis: {
+          data: newValue
+        }
+      });
+    },
+    yData(newValue, oldValue) {
+      this.lineChart.setOption({
+        series: [
+          {
+            data: newValue
+          }
+        ]
+      });
     }
   },
   methods: {

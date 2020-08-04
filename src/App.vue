@@ -189,6 +189,7 @@ body {
     }
   }
 }
+
 @font-face {
   font-family: title;
   src: url("~@/assets/tff/FZZZHONGHJW.TTF");
