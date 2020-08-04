@@ -86,7 +86,7 @@
         class="gis"
         v-if="area.length"
       >
-        <v-proton></v-proton>
+        <v-proton v-if="router==='project' || router==='share'"></v-proton>
         <v-gis
           :area='area'
           class="map__gis__canvas"
