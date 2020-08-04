@@ -1,7 +1,7 @@
 <template>
   <div class="level__layout">
     <header>
-      图例
+      {{title}}
     </header>
     <main>
       <div
@@ -24,6 +24,9 @@
 export default {
   name: "vLevel",
   props: {
+    title: {
+      type: String
+    },
     level: {
       type: Array, // //≤
       default: function() {

@@ -69,12 +69,23 @@ export default {
     this.initLayer();
     this.initGroupItem();
   },
+  beforeDestroy() {
+    this.group.removeAllChildren();
+    this.pathGroup.removeAllChildren();
+    this.path.forEach((item, i) => {
+      item.remove();
+    });
+    this.path = null;
+    console.log("销毁了！！！！");
+  },
   methods: {
     initLayer() {
       this.scene = new Scene({
         container: this.gis,
         width: this.w,
-        height: this.h
+        height: this.h,
+        bufferSize: 0,
+        contextType: "2d"
       });
       this.layer = this.scene.layer();
       this.group = new Group();
@@ -94,7 +105,8 @@ export default {
       });
       this.layer.append(this.group);
       this.layer.append(this.pathGroup);
-      drawOut.init({ Group: this.group });
+      const out = new drawOut();
+      out.init({ Group: this.group });
     },
     initGroupItem() {
       const group = this.pathGroup;

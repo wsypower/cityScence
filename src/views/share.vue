@@ -4,13 +4,42 @@
     <div class="wing">
       <div class="wing__left"></div>
       <div class="wing__right"></div>
+      <div
+        class="wing__center"
+        v-if="router==='project'"
+      >
+        <v-level
+          :title="proLevelTiele"
+          :level="proLevel"
+        ></v-level>
+      </div>
+      <div
+        class="buttons-center"
+        v-if="router==='project'"
+      >
+        <div
+          class="buttons-item"
+          v-for="(item, index) in buttons"
+          :key="index"
+        >
+          <div
+            class="buttons__content"
+            :class='{active:index===buttonsIndex}'
+            @click="buttonsHandlerClick(index)"
+          >{{item}}</div>
+        </div>
+      </div>
     </div>
     <div class="map__gis">
       <div class="layout__left">
-        <div class="left__slider">
+        <!-- share 页面 -->
+        <div
+          class="left__slider"
+          v-if="router==='share'"
+        >
           <v-card :height="549">
             <v-card-base
-              title='项目图层'
+              title='图层选择'
               :width="261"
               :height="468"
             >
@@ -23,17 +52,47 @@
                 ></v-radio>
               </div>
               <div class="level">
-                <v-level></v-level>
+                <v-level
+                  :title="shareLevelTiele"
+                  :level="shareLevel"
+                ></v-level>
               </div>
+            </v-card-base>
+          </v-card>
+        </div>
+        <!-- project 页面 -->
+        <div
+          class="left__slider project__slider"
+          v-if="router==='project'"
+        >
+          <v-card :height="549">
+            <v-card-base
+              title='项目图层'
+              :width="261"
+              :height="468"
+            >
+              <v-radio
+                class="border-botoom-gr"
+                :radioOptions.sync="itemLayer"
+                @radioChange='shareRadioChaneg'
+              ></v-radio>
             </v-card-base>
           </v-card>
         </div>
       </div>
       <div class="gis">
-        <v-gis :area.sync='area'></v-gis>
+        <v-proton></v-proton>
+        <v-gis
+          :area.sync='area'
+          class="map__gis__canvas"
+        ></v-gis>
       </div>
       <div class="layout__right">
-        <div class="right__slider">
+        <!-- share -->
+        <div
+          class="right__slider"
+          v-if="router==='share'"
+        >
           <v-card :height="858">
             <v-card-base
               title='预警列表'
@@ -60,6 +119,18 @@
             </v-card-base>
           </v-card>
         </div>
+        <!-- 项目仓 -->
+        <div
+          class="right__slider"
+          v-if="router==='project'"
+        >
+          <v-card :height="858">
+            <v-project
+              :aims.sync='aims'
+              :completionRate.sync='completionRate'
+            ></v-project>
+          </v-card>
+        </div>
       </div>
     </div>
 
@@ -76,6 +147,8 @@ import vShareBar from "@/components/view/share/bar.vue";
 import { changeBarData } from "@/utils/view";
 import shareLineVue from "../components/chart/line/share-line.vue";
 import Object from "spritejs";
+import vProton from "@/components/proton/proton.vue";
+import vProject from "@/components/view/project/project.vue";
 export default {
   name: "share",
   components: {
@@ -85,9 +158,14 @@ export default {
     [vRadio.name]: vRadio,
     [levelVue.name]: levelVue,
     [vShareBar.name]: vShareBar,
-    [shareLineVue.name]: shareLineVue
+    [shareLineVue.name]: shareLineVue,
+    [vProton.name]: vProton,
+    [vProject.name]: vProject
   },
-  mounted() {},
+  mounted() {
+    // this.router = this.$route.query.routers;
+    console.log('初始化加载')
+  },
   computed: {
     waringList() {
       return changeBarData({
@@ -95,11 +173,64 @@ export default {
         colors: ["#E2111B", "#FF8400", "#FFEA00", "#02EAFF"],
         boundary: 3
       });
+    },
+    buttons() {
+      return ["供水节水", "污水处理", "城市排涝"];
+    },
+    router() {
+      console.log(this.$store.state.router);
+      return this.$store.state.router.slice(1);
     }
   },
   data() {
     return {
-      router: "share",
+      buttonsIndex: 0,
+      // router: "project", // project  // share
+      // 图层选择图例
+      shareLevelTiele: "图例",
+      shareLevel: [
+        {
+          color: "green",
+          name: "优秀（≤6.13%）"
+        },
+        {
+          color: "yellow",
+          name: "合格（6.13<x≤10%）"
+        },
+        {
+          color: "red",
+          name: "不合格（>10%）"
+        },
+        {
+          color: "gray",
+          name: "无数据"
+        }
+      ],
+      // 项目
+      proLevelTiele: "建成率",
+      proLevel: [
+        {
+          color: "green",
+          name: "≥100%"
+        },
+        {
+          color: "yellow",
+          name: "80%~100%"
+        },
+        {
+          color: "orange",
+          name: "30%~80%"
+        },
+        {
+          color: "red",
+          name: "≤30%"
+        },
+        {
+          color: "gray",
+          name: "无数据"
+        }
+      ],
+      // 图层选择
       radioData: {
         default: 1,
         options: [
@@ -109,6 +240,19 @@ export default {
             value: 3,
             name: "城市污水监督性检测达标图层"
           }
+        ]
+      },
+      itemLayer: {
+        default: 1,
+        options: [
+          { value: 1, name: "新建供水管网" },
+          { value: 2, name: "改造供水管网" },
+          { value: 3, name: "新增供水能力" },
+          { value: 4, name: "改造二次供水设施" },
+          { value: 5, name: "城乡供水一体化部分" },
+          { value: 6, name: "新建雨水收集系统" },
+          { value: 7, name: "新建节水器具" },
+          { value: 8, name: "改造一户一表" }
         ]
       },
       // 预警列表
@@ -121,6 +265,27 @@ export default {
         { name: "嘉兴市", value: 600 },
         { name: "金华市", value: 500 },
         { name: "丽水市", value: 400 }
+      ],
+      // 目标
+      aims: [
+        { name: "全省年度建成目标(公里)", value: 1500 },
+        { name: "全省年度建成数量(公里)", value: 1200 },
+        { name: "全省年度建成率(%)", value: 900 },
+        { name: "全省年度投资额(万元)", value: 800 }
+      ],
+      // 建成率排名
+      completionRate: [
+        { name: "杭州", value: 1800, percentage: 30 },
+        { name: "宁波", value: 2800, percentage: 40 },
+        { name: "温州", value: 800, percentage: 50 },
+        { name: "湖州", value: 600, percentage: 60 },
+        { name: "金华", value: 400, percentage: 70 },
+        { name: "台州", value: 80, percentage: 80 },
+        { name: "绍兴", value: 800, percentage: 90 },
+        { name: "嘉兴", value: 800, percentage: 10 },
+        { name: "舟山", value: 800, percentage: 20 },
+        { name: "衢州", value: 800, percentage: 30 },
+        { name: "丽水", value: 800, percentage: 30 }
       ],
       area: [
         { name: "wenzhou", color: "red" },
@@ -151,6 +316,10 @@ export default {
     };
   },
   methods: {
+    buttonsHandlerClick(index) {
+      console.log(index);
+      this.buttonsIndex = index;
+    },
     shareRadioChaneg(e) {
       console.log(e);
       if (e === 2) {
@@ -191,6 +360,7 @@ export default {
   padding: 112px 0px;
   background: url("~@/assets/images/share.png") no-repeat;
   position: relative;
+
   .map__gis {
     width: 100%;
     height: 100%;
@@ -202,6 +372,12 @@ export default {
     .gis {
       width: 961px;
       height: 100%;
+      position: relative;
+      .map__gis__canvas {
+        position: relative;
+        top: -876px;
+        right: -13px;
+      }
     }
     .layout__left {
       display: flex;
@@ -247,7 +423,7 @@ export default {
     }
   }
   .wing {
-    width: 1161px;
+    width: 1200px;
     height: 641px;
     position: absolute;
     top: 264px;
@@ -267,6 +443,49 @@ export default {
       position: absolute;
       top: 0px;
       right: 0px;
+    }
+    .wing__center {
+      width: 200px;
+      height: 200px;
+      position: absolute;
+      bottom: 90px;
+      right: 50px;
+    }
+    .buttons-center {
+      position: absolute;
+      width: 490px;
+      height: 50px;
+      top: -125px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      z-index: 100;
+      .buttons-item {
+        width: 150px;
+        height: 50px;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 20px;
+        font-weight: 600;
+        cursor: pointer;
+        .buttons__content {
+          width: 100%;
+          height: 100%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background: url("~@/assets/images/buttons-bc.png");
+          cursor: pointer;
+          transition: all 0.3s;
+        }
+        .buttons__content.active {
+          background: url("~@/assets/images/buttons-ba-active.png");
+        }
+      }
     }
   }
 }

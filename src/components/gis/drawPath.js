@@ -40,6 +40,7 @@ class drawPath {
     this.draw();
     this.text();
     this.append(this.p1, this.p2, this.text1, this.text2);
+    // this.append(this.p1, this.p2);
     return this;
   }
   draw() {
@@ -55,16 +56,19 @@ class drawPath {
       pos: pos,
       texture: this.name === "舟山" ? "" : texture,
       textureRect: [0, 0],
-      filter: "drop-shadow(-1, 1, 15, rgba(255,255,255,0.7))",
+      // filter: "drop-shadow(-1, 1, 15, rgba(255,255,255,0.7))",
+      filter: "drop-shadow(0, 0, 15, rgba(255,255,255,0.7))",
       zIndex: 1,
     });
     this.p2.attr({
       d: d,
       pos: pos,
-      strokeColor: "#FFFFFF",
+      // fillColor: "rgba(6,13,25,1)",
+      strokeColor: "rgba(228,245,255,0.9)",
       fillColor: Gradients,
-      lineWidth: 3,
+      lineWidth: 2,
       zIndex: 1,
+      // filter: "drop-shadow(0, 0, 25, rgba(255,255,255,1))",
     });
   }
   text() {
@@ -151,6 +155,17 @@ class drawPath {
     this.p2.transition(0).attr({
       fillColor: ColorsGradient[color],
     });
+  }
+  remove() {
+    this.p1.remove();
+    this.p1.remove();
+    this.p2.remove();
+    this.text1.remove();
+    this.text2.remove();
+    this.p1 = null;
+    this.p2 = null;
+    this.text1 = null;
+    this.text2 = null;
   }
 }
 

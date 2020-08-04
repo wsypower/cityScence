@@ -24,12 +24,12 @@ class NavAnimate {
     this.parallelLeftArray = [];
     this.parallelRightArray = [];
   }
-  init({ target, shape, slider, footer }) {
+  init({ target, shape, slider, footer, index }) {
     this.target = target;
     this.slider = slider;
     this.ctx = footer;
     this.tabControl.init({ target, shape });
-    this.sliderInit(slider);
+    this.sliderInit(slider, index);
     this.initCanvas(footer);
     return this;
   }
@@ -39,6 +39,8 @@ class NavAnimate {
       container: footer,
       width: 1920,
       height: 121,
+      bufferSize: 0,
+      contextType: "2d",
     });
     this.ctx = scene.layer();
     this.drawCenterBorder();
@@ -137,20 +139,22 @@ class NavAnimate {
       this.ctx.appendChild(item);
     });
   }
-  sliderInit(slider) {
+  sliderInit(slider, index) {
     const sliderScene = new Scene({
       container: slider,
       width: 876,
       height: 110,
+      bufferSize: 0,
+      contextType: "2d",
     });
     this.sliderScene = sliderScene.layer();
-    this.drawSliderRect();
-    this.iconRetouchInit(2);
+    this.drawSliderRect(index);
+    this.iconRetouchInit(index);
   }
-  drawSliderRect() {
+  drawSliderRect(index) {
     this.rect = new Rect({
       normalize: true,
-      pos: point[2],
+      pos: point[index],
       size: [70, 90],
       fillColor: "#2cc3f4",
       lineCap: "square",
@@ -165,17 +169,6 @@ class NavAnimate {
       easing: "ease-out",
       fill: "both",
     });
-    this.rect.animate(
-      [
-        { fillColor: "#2cc3f4" },
-        { fillColor: "#fff" },
-        { fillColor: "#2cc3f4" },
-      ],
-      {
-        duration: 1200,
-        fill: "both",
-      }
-    );
   }
   iconRetouchInit(index) {
     const icon = new Sprite({

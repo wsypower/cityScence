@@ -6,7 +6,9 @@
         <v-gloabl-header></v-gloabl-header>
       </header>
       <main>
-        <router-view />
+        <keep-alive>
+          <router-view />
+        </keep-alive>
       </main>
       <footer>
         <v-gloabl-nav />
@@ -23,6 +25,7 @@ export default {
     [gloablHeader.name]: gloablHeader
   },
   mounted() {
+    this.$store.commit("changeRouter", window.location.href.split("#")[1]);
     var canvas = document.getElementById("global_canvas"),
       ctx = canvas.getContext("2d"),
       w = (canvas.width = 1920),

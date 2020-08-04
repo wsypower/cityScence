@@ -24,7 +24,7 @@
               v-for="(item,index) in nav"
               :key="index"
               @click="clickLightUp(item.x,index)"
-              :class=" tabIndex === index?'active':'' "
+              :class=" index === tabIndex?'active':'' "
             >
               <span
                 class="iconfont"
@@ -57,13 +57,13 @@ export default {
         {
           icon: "icon-daibanshixiang",
           value: "项目仓",
-          router: "",
+          router: "/project",
           x: 167
         },
         {
           icon: "icon-gongxiang",
           value: "共享仓",
-          router: "/share",
+          router: "/gx",
           x: 303
         },
         {
@@ -75,7 +75,7 @@ export default {
         {
           icon: "icon-yunhang",
           value: "运行仓",
-          router: "",
+          router: "/share",
           x: 570
         },
         {
@@ -99,26 +99,31 @@ export default {
     },
     footer() {
       return this.$refs.footer;
+    },
+    router() {
+      return this.$store.state.router;
     }
   },
   mounted() {
+    this.$store.commit("changeRouter", window.location.href.split("#")[1]);
+    this.tabIndex = this.nav.findIndex(v => v.router === this.router);
     // 初始化canvas对象
     NavCanvasAnimate.init({
       target: this.navScalyCanvasDom,
       shape: this.shape,
       slider: this.slider,
-      footer: this.footer
+      footer: this.footer,
+      index: this.tabIndex
     });
   },
   methods: {
     clickLightUp(x, index) {
       this.tabIndex = index;
       NavCanvasAnimate.clickLightUp(x, index);
-      this.nav[index].router && this.$router.push(this.nav[index].router);
+
+      this.$store.commit("changeRouter", this.nav[index].router);
+      this.$router.push(this.nav[index].router);
     }
-    // hoverLightUp() {
-    //   NavCanvasAnimate.hoverLightUp();
-    // }
   }
 };
 </script>

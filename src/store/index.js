@@ -4,8 +4,14 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 
 export default new Vuex.Store({
-  state: {},
-  mutations: {},
+  state: {
+    router: "/",
+  },
+  mutations: {
+    changeRouter(state, routers) {
+      state.router = routers;
+    },
+  },
   actions: {},
-  modules: {}
+  modules: {},
 });
