@@ -31,6 +31,7 @@ class drawPath {
     this.text2 = null;
   }
   init({ name, color, group }) {
+    this.city = name;
     this.name = city[name];
     this.Gradient = ColorsGradient[color];
     this.texture = texture[color];
@@ -55,6 +56,9 @@ class drawPath {
       fillColor: "rgba(6,13,25,1)",
       pos: pos,
       texture: this.name === "舟山" ? "" : texture,
+      // texture:
+      // this.name === "舟山" ? "" : require("@/assets/images/texture.png"),
+      // textureRect: [0, 0, 0, 0],
       textureRect: [0, 0],
       // filter: "drop-shadow(-1, 1, 15, rgba(255,255,255,0.7))",
       filter: "drop-shadow(0, 0, 15, rgba(255,255,255,0.7))",
@@ -136,25 +140,13 @@ class drawPath {
     });
   }
   update({ color }) {
-    // console.log(color);
-    // this.Gradient = ColorsGradient[color];
-    // this.texture = texture[color];
-    // let Gradients = this.Gradient;
-    // let texture = this.texture;
-    // if (this.name === "温州") {
-    //   console.log(this);
-    // }
-    // console.log(this.name)
-    // this.p1.update();
-    // this.p2.update();
-    if (this.name !== "舟山") {
-      this.p1.transition(0).attr({
-        texture: texture[color],
-      });
+    let newtexture = texture[color];
+    if (this.name === "舟山") {
+      newtexture = "";
     }
-    this.p2.transition(0).attr({
-      fillColor: ColorsGradient[color],
-    });
+    this.p1.setAttribute("texture", newtexture);
+    this.p1.setAttribute("textureRect", [0, 0]);
+    this.p2.setAttribute("fillColor", ColorsGradient[color]);
   }
   remove() {
     this.p1.remove();

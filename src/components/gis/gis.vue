@@ -27,23 +27,7 @@ export default {
   },
   props: {
     area: {
-      type: Array,
-      default: () => {
-        return [
-          { name: "wenzhou", color: "red" },
-          { name: "wenzhou", color: "red" },
-          { name: "lishui", color: "orange" },
-          { name: "tanzhou", color: "yellow" },
-          { name: "jinhua", color: "red" },
-          { name: "taizhou", color: "gray" },
-          { name: "shaoxing", color: "yellow" },
-          { name: "hangzhou", color: "green" },
-          { name: "ningbo", color: "green" },
-          { name: "jiaxing", color: "orange" },
-          { name: "huzhou", color: "yellow" },
-          { name: "zhoushan", color: "yellow" }
-        ];
-      }
+      type: Array
     }
   },
   data() {
@@ -60,7 +44,8 @@ export default {
       deep: true,
       handler(newValue, oldValue) {
         this.path.forEach((item, i) => {
-          item.update(newValue[i]);
+          const index = newValue.findIndex(v => v.name === item.city);
+          item.update(newValue[index]);
         });
       }
     }
@@ -69,6 +54,7 @@ export default {
     this.initLayer();
     this.initGroupItem();
   },
+
   beforeDestroy() {
     this.group.removeAllChildren();
     this.pathGroup.removeAllChildren();
@@ -83,9 +69,9 @@ export default {
       this.scene = new Scene({
         container: this.gis,
         width: this.w,
-        height: this.h,
-        bufferSize: 0,
-        contextType: "2d"
+        height: this.h
+        // bufferSize: 0,
+        // contextType: "2d"
       });
       this.layer = this.scene.layer();
       this.group = new Group();

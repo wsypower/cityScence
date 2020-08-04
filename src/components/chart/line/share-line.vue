@@ -3,7 +3,6 @@
     class="share--line"
     ref="share"
   >
-    123
   </div>
 </template>
 
@@ -20,8 +19,20 @@ export default {
     share() {
       return this.$refs.share;
     },
-    options() {
-      return {
+    xDatas() {
+      return this.lineData.map(v => v.value);
+    },
+    yDatas() {
+      return this.lineData.map(v => v.name);
+    }
+  },
+  mounted() {
+    this.init();
+  },
+  data() {
+    return {
+      lineChart: null,
+      options: {
         barWidth: 10,
         grid: {
           top: "15",
@@ -101,16 +112,22 @@ export default {
             data: this.lineData.map(v => v.value)
           }
         ]
-      };
-    }
-  },
-  mounted() {
-    this.init();
-  },
-  data() {
-    return {
-      lineChart: null
+      }
     };
+  },
+  watch: {
+    lineData(newValue, oldValue) {
+      this.lineChart.setOption({
+        yAxis: {
+          data: newValue.map(v => v.name)
+        },
+        series: [
+          {
+            data: newValue.map(v => v.value)
+          }
+        ]
+      });
+    }
   },
   methods: {
     init() {

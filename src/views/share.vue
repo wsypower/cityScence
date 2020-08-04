@@ -48,6 +48,7 @@
                   class="border-botoom-gr"
                   :border='true'
                   :radioOptions.sync="radioData"
+                  :defaultType.sync="radioDataType"
                   @radioChange='shareRadioChaneg'
                 ></v-radio>
               </div>
@@ -74,16 +75,20 @@
               <v-radio
                 class="border-botoom-gr"
                 :radioOptions.sync="itemLayer"
+                :defaultType.sync="itemLayerType"
                 @radioChange='shareRadioChaneg'
               ></v-radio>
             </v-card-base>
           </v-card>
         </div>
       </div>
-      <div class="gis">
+      <div
+        class="gis"
+        v-if="area.length"
+      >
         <v-proton></v-proton>
         <v-gis
-          :area.sync='area'
+          :area='area'
           class="map__gis__canvas"
         ></v-gis>
       </div>
@@ -103,7 +108,7 @@
               <v-share-bar
                 v-for="(item, index) in waringList"
                 :key="index"
-                :percentage='item.percentage'
+                :percentage='item.value'
                 :index="index+1"
                 :value='item.value'
                 :names="item.name"
@@ -114,8 +119,9 @@
               title='指数排名'
               :width="290"
               :height="382"
+              v-if='indexRanking.length'
             >
-              <v-share-line :lineData="indexRanking"></v-share-line>
+              <v-share-line :lineData.sync="indexRanking"></v-share-line>
             </v-card-base>
           </v-card>
         </div>
@@ -147,8 +153,15 @@ import vShareBar from "@/components/view/share/bar.vue";
 import { changeBarData } from "@/utils/view";
 import shareLineVue from "../components/chart/line/share-line.vue";
 import Object from "spritejs";
+import {
+  getListRadio,
+  getWaterLeakageList,
+  getWaterRatioList,
+  getWsList
+} from "../api/share";
 import vProton from "@/components/proton/proton.vue";
 import vProject from "@/components/view/project/project.vue";
+import shareRadioList from "@/mock/share.js";
 export default {
   name: "share",
   components: {
@@ -162,9 +175,33 @@ export default {
     [vProton.name]: vProton,
     [vProject.name]: vProject
   },
+  created() {
+    this.itemLayerType = shareRadioList[this.buttonsIndex].options[0].value;
+  },
   mounted() {
-    // this.router = this.$route.query.routers;
-    console.log('初始化加载')
+    console.log("初始化加载");
+    if (this.router === "project") {
+      this.isMounted && this._getListRadio();
+    } else {
+      this.isMounted && this._getWater();
+    }
+    this.isMounted = false;
+  },
+  watch: {
+    router(newValue, oldValue) {
+      if (this.router === "project") {
+        !this.isMounted && this._getListRadio();
+      } else if (this.router === "share") {
+        !this.isMounted && this._getWater(this.radioDataType);
+      }
+    }
+  },
+  activated() {
+    if (this.router === "project") {
+      !this.isMounted && this._getListRadio();
+    } else {
+      !this.isMounted && this._getWater(this.radioDataType);
+    }
   },
   computed: {
     waringList() {
@@ -180,14 +217,87 @@ export default {
     router() {
       console.log(this.$store.state.router);
       return this.$store.state.router.slice(1);
+    },
+    itemLayer() {
+      return shareRadioList[this.buttonsIndex];
+    },
+    // 目标
+    aims() {
+      const totalMessage = this.cityData && this.cityData.totalMessage;
+      if (totalMessage == null) {
+        return [];
+      }
+      const renameKeys = {
+        plan: "全省年度建成目标(公里)",
+        finished: "全省年度建成数量(公里)",
+        rate: "全省年度建成率(%)",
+        investment: "全省年度投资额(万元)"
+      };
+      return [
+        { name: renameKeys["plan"], value: totalMessage["plan"] },
+        { name: renameKeys["finished"], value: totalMessage["finished"] },
+        { name: renameKeys["rate"], value: totalMessage["rate"] },
+        { name: renameKeys["investment"], value: totalMessage["investment"] }
+      ];
+    },
+    // 建成率排名
+    completionRate() {
+      const cityList = this.cityData && this.cityData.cityList;
+      if (cityList == null) {
+        return [];
+      }
+
+      return cityList.map((val, index) => {
+        return {
+          name: val["cityName"],
+          value: val["finished"],
+          percentage: val["rate"]
+        };
+      });
+      return [
+        { name: "杭州", value: 1800, percentage: 30 },
+        { name: "宁波", value: 2800, percentage: 40 },
+        { name: "温州", value: 800, percentage: 50 },
+        { name: "湖州", value: 600, percentage: 60 },
+        { name: "金华", value: 400, percentage: 70 },
+        { name: "台州", value: 80, percentage: 80 },
+        { name: "绍兴", value: 800, percentage: 90 },
+        { name: "嘉兴", value: 800, percentage: 10 },
+        { name: "舟山", value: 800, percentage: 20 },
+        { name: "衢州", value: 800, percentage: 30 },
+        { name: "丽水", value: 800, percentage: 30 }
+      ];
+    },
+    // 图层选择
+    radioData() {
+      return {
+        options: [
+          { value: "1", name: "城市供水区域漏损图层" },
+          { value: "2", name: "城市再生水利用率图层" },
+          {
+            value: "3",
+            name: "城市污水监督性检测达标图层"
+          }
+        ]
+      };
     }
   },
   data() {
     return {
+      // 是否初始化加载
+      isMounted: true,
+      // 全数据
+      cityData: null,
+
+      //项目仓当前type
+      itemLayerType: null,
+      // 目标
+      // aims: null,
       buttonsIndex: 0,
-      // router: "project", // project  // share
       // 图层选择图例
       shareLevelTiele: "图例",
+      // 图层选择默认值
+      radioDataType: "1",
       shareLevel: [
         {
           color: "green",
@@ -230,124 +340,256 @@ export default {
           name: "无数据"
         }
       ],
-      // 图层选择
-      radioData: {
-        default: 1,
-        options: [
-          { value: 1, name: "城市供水区域漏损图层" },
-          { value: 2, name: "城市再生水利用率图层" },
-          {
-            value: 3,
-            name: "城市污水监督性检测达标图层"
-          }
-        ]
-      },
-      itemLayer: {
-        default: 1,
-        options: [
-          { value: 1, name: "新建供水管网" },
-          { value: 2, name: "改造供水管网" },
-          { value: 3, name: "新增供水能力" },
-          { value: 4, name: "改造二次供水设施" },
-          { value: 5, name: "城乡供水一体化部分" },
-          { value: 6, name: "新建雨水收集系统" },
-          { value: 7, name: "新建节水器具" },
-          { value: 8, name: "改造一户一表" }
-        ]
-      },
+
       // 预警列表
-      warningDatas: [
-        { name: "杭州市", value: 1500 },
-        { name: "宁波市", value: 1200 },
-        { name: "温州市", value: 900 },
-        { name: "台州市", value: 800 },
-        { name: "绍兴市", value: 700 },
-        { name: "嘉兴市", value: 600 },
-        { name: "金华市", value: 500 },
-        { name: "丽水市", value: 400 }
-      ],
-      // 目标
-      aims: [
-        { name: "全省年度建成目标(公里)", value: 1500 },
-        { name: "全省年度建成数量(公里)", value: 1200 },
-        { name: "全省年度建成率(%)", value: 900 },
-        { name: "全省年度投资额(万元)", value: 800 }
-      ],
-      // 建成率排名
-      completionRate: [
-        { name: "杭州", value: 1800, percentage: 30 },
-        { name: "宁波", value: 2800, percentage: 40 },
-        { name: "温州", value: 800, percentage: 50 },
-        { name: "湖州", value: 600, percentage: 60 },
-        { name: "金华", value: 400, percentage: 70 },
-        { name: "台州", value: 80, percentage: 80 },
-        { name: "绍兴", value: 800, percentage: 90 },
-        { name: "嘉兴", value: 800, percentage: 10 },
-        { name: "舟山", value: 800, percentage: 20 },
-        { name: "衢州", value: 800, percentage: 30 },
-        { name: "丽水", value: 800, percentage: 30 }
-      ],
-      area: [
-        { name: "wenzhou", color: "red" },
-        { name: "lishui", color: "orange" },
-        { name: "tanzhou", color: "yellow" },
-        { name: "jinhua", color: "red" },
-        { name: "taizhou", color: "gray" },
-        { name: "shaoxing", color: "yellow" },
-        { name: "hangzhou", color: "green" },
-        { name: "ningbo", color: "green" },
-        { name: "jiaxing", color: "orange" },
-        { name: "huzhou", color: "yellow" },
-        { name: "zhoushan", color: "yellow" }
-      ],
-      indexRanking: [
-        { name: "杭州市", value: 1500 },
-        { name: "宁波市", value: 1200 },
-        { name: "温州市", value: 900 },
-        { name: "台州市", value: 800 },
-        { name: "绍兴市", value: 700 },
-        { name: "嘉兴市", value: 600 },
-        { name: "丽水市", value: 500 },
-        { name: "衢州市", value: 400 },
-        { name: "湖州市", value: 400 },
-        { name: "舟山市", value: 400 },
-        { name: "金华市", value: 400 }
-      ]
+      warningDatas: [],
+      area: [],
+      indexRanking: []
     };
   },
   methods: {
     buttonsHandlerClick(index) {
-      console.log(index);
       this.buttonsIndex = index;
+      this.itemLayerType = shareRadioList[index].options[0].value;
+      this._getListRadio();
     },
     shareRadioChaneg(e) {
       console.log(e);
-      if (e === 2) {
-        this.area = [
-          { name: "wenzhou", color: "yellow" },
-          { name: "lishui", color: "orange" },
-          { name: "tanzhou", color: "yellow" },
-          { name: "jinhua", color: "red" },
-          { name: "taizhou", color: "gray" },
-          { name: "shaoxing", color: "yellow" },
-          { name: "hangzhou", color: "green" },
-          { name: "ningbo", color: "green" },
-          { name: "jiaxing", color: "orange" },
-          { name: "huzhou", color: "yellow" },
-          { name: "zhoushan", color: "yellow" }
-        ];
-
-        this.warningDatas = [
-          { name: "宁波市", value: 1200 },
-          { name: "温州市", value: 900 },
-          { name: "台州市", value: 800 },
-          { name: "杭州市", value: 1500 },
-          { name: "绍兴市", value: 700 },
-          { name: "嘉兴市", value: 600 },
-          { name: "金华市", value: 500 },
-          { name: "丽水市", value: 400 }
-        ];
+      if (this.router === "project") {
+        this.itemLayerType = e;
+        this._getListRadio();
+      } else {
+        this.radioDataType = e;
+        this._getWater(e);
       }
+    },
+    /**
+     * @description
+     * 项目仓请求数据
+     * @author wsy
+     * @date 2020-08-04  13:04:11
+     */
+    _getListRadio() {
+      const url = ["gjs", "pl", "ws"];
+      return getListRadio(url[this.buttonsIndex], { type: this.itemLayerType })
+        .then(res => {
+          this.cityData = res;
+          let cityList = res.cityList;
+          const city = {
+            杭州市: "hangzhou",
+            宁波市: "ningbo",
+            温州市: "wenzhou",
+            台州市: "taizhou",
+            绍兴市: "shaoxing",
+            嘉兴市: "jiaxing",
+            丽水市: "lishui",
+            衢州市: "tanzhou",
+            湖州市: "huzhou",
+            舟山市: "zhoushan",
+            金华市: "jinhua"
+          };
+          const calculationColor = rate => {
+            if (rate >= 100) {
+              return "green";
+            } else if (100 > rate && rate > 80) {
+              return "yellow";
+            } else if ((80 > rate) & (rate > 30)) {
+              return "orange";
+            } else if (rate <= 30 && rate > 0) {
+              return "red";
+            } else {
+              return "gray";
+            }
+          };
+          this.area = cityList.map(item => {
+            return {
+              name: city[item["cityName"]],
+              color: calculationColor(item.rate)
+            };
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    /**
+     * @description
+     * 运行仓接口转发
+     * @author wsy
+     * @date 2020-08-04  19:10:35
+     * @param {String} index your introduction
+     */
+    _getWater(index) {
+      switch (index) {
+        case "1":
+          return this._getWaterLeakageList();
+        case "2":
+          return this._getWaterRatioList();
+        case "3":
+          return this._getWsList();
+        default:
+          return this._getWaterLeakageList();
+      }
+    },
+    /**
+     * @description
+     * 漏损率
+     * @author wsy
+     * @date 2020-08-04  19:10:05
+     */
+    _getWaterLeakageList() {
+      return getWaterLeakageList()
+        .then(res => {
+          const city = {
+            杭州市: "hangzhou",
+            宁波市: "ningbo",
+            温州市: "wenzhou",
+            台州市: "taizhou",
+            绍兴市: "shaoxing",
+            嘉兴市: "jiaxing",
+            丽水市: "lishui",
+            衢州市: "tanzhou",
+            湖州市: "huzhou",
+            舟山市: "zhoushan",
+            金华市: "jinhua"
+          };
+          const calculationColor = rate => {
+            if (rate <= 6.13) {
+              return "green";
+            } else if (10 >= rate && rate > 6.13) {
+              return "yellow";
+            } else if (rate > 10) {
+              return "red";
+            } else {
+              return "gray";
+            }
+          };
+          const data = res.map(item => {
+            return {
+              ...item,
+              name: item["cityName"],
+              value: ~~(item.value * 100) / 100
+            };
+          });
+          this.warningDatas = data;
+          this.indexRanking = data;
+          this.area = res.map(item => {
+            return {
+              name: city[item["cityName"]],
+              color: calculationColor(item.value)
+            };
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    /**
+     * @description
+     * 再生水
+     * @author wsy
+     * @date 2020-08-04  19:10:13
+     */
+    _getWaterRatioList() {
+      const city = {
+        杭州市: "hangzhou",
+        宁波市: "ningbo",
+        温州市: "wenzhou",
+        台州市: "taizhou",
+        绍兴市: "shaoxing",
+        嘉兴市: "jiaxing",
+        丽水市: "lishui",
+        衢州市: "tanzhou",
+        湖州市: "huzhou",
+        舟山市: "zhoushan",
+        金华市: "jinhua"
+      };
+      const calculationColor = rate => {
+        if (rate <= 6.13) {
+          return "green";
+        } else if (10 >= rate && rate > 6.13) {
+          return "yellow";
+        } else if (rate > 10) {
+          return "red";
+        } else {
+          return "gray";
+        }
+      };
+      return getWaterRatioList()
+        .then(res => {
+          const data = res.map(item => {
+            return {
+              ...item,
+              name: item["cityName"],
+              value: ~~(item.value * 100) / 100
+            };
+          });
+          this.warningDatas = data;
+          this.indexRanking = data;
+          this.area = res.map(item => {
+            return {
+              name: city[item["cityName"]],
+              color: calculationColor(item.value)
+            };
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    },
+    /**
+     * @description
+     * 污水检测
+     * @author wsy
+     * @date 2020-08-04  19:10:21
+     */
+    _getWsList() {
+      const city = {
+        杭州市: "hangzhou",
+        宁波市: "ningbo",
+        温州市: "wenzhou",
+        台州市: "taizhou",
+        绍兴市: "shaoxing",
+        嘉兴市: "jiaxing",
+        丽水市: "lishui",
+        衢州市: "tanzhou",
+        湖州市: "huzhou",
+        舟山市: "zhoushan",
+        金华市: "jinhua"
+      };
+      const calculationColor = rate => {
+        if (rate <= 6.13) {
+          return "green";
+        } else if (10 >= rate && rate > 6.13) {
+          return "yellow";
+        } else if (rate > 10) {
+          return "red";
+        } else {
+          return "gray";
+        }
+      };
+      return getWsList()
+        .then(res => {
+          const data = res.map(item => {
+            return {
+              ...item,
+              name: item["cityName"],
+              value: ~~(item.value * 100) / 100
+            };
+          });
+
+          this.warningDatas = data;
+          this.indexRanking = data;
+          this.area = res.map(item => {
+            return {
+              name: city[item["cityName"]],
+              color: calculationColor(item.value)
+            };
+          });
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   }
 };

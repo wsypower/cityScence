@@ -1,7 +1,7 @@
 <template>
   <div class="radio__list">
     <a-radio-group
-      v-model="radioOptions.default"
+      v-model="value"
       @change="onChange"
       class="radio__grops"
       :class="{'border-botoom-gr':border}"
@@ -42,30 +42,29 @@ export default {
     border: {
       type: false
     },
+    defaultType: {
+      type: String
+    },
     radioOptions: {
-      type: Object,
-      default: () => {
-        return {
-          default: 1,
-          options: [
-            { value: 1, name: "城市供水区域漏损图层" },
-            { value: 2, name: "城市再生水利用率图层" },
-            {
-              value: 3,
-              name: "城市污水监督性检测达标图层"
-            }
-          ]
-        };
-      }
+      type: Object
     }
+  },
+  mounted() {
+    this.value = this.defaultType;
   },
   data() {
     return {
-      value: 1
+      value: null
     };
+  },
+  watch: {
+    radioOptions(newValue, oldValue) {
+      this.value = newValue.options[0].value;
+    }
   },
   methods: {
     onChange(e) {
+      this.value = e.target.value;
       this.$emit("radioChange", e.target.value);
     }
   }
@@ -101,6 +100,7 @@ export default {
       color: #ffffff;
       font-size: 16px;
       font-weight: 600;
+      cursor: pointer;
       .radio__name {
         display: flex;
       }

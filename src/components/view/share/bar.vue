@@ -16,7 +16,7 @@
       <div class="bar__point">{{index}}</div>
     </div>
     <main>
-      <div class="name">{{names}}</div>
+      <div class="name">{{names.slice(0,2)}}</div>
       <div class="bar__warp">
         <el-progress
           :percentage="percentage"
@@ -81,12 +81,17 @@ export default {
         options: {
           useEasing: true,
           useGrouping: true,
+          decimalPlaces: 1,
           separator: "",
           decimal: ".",
           prefix: "",
-          suffix: ""
+          suffix: "%"
         }
       };
+    },
+    valuesToNum() {
+      // console.log(typeof this.value);
+      return this.value - 0;
     }
   }
 };
@@ -141,7 +146,7 @@ export default {
     }
   }
   .nums {
-    min-width: 50px;
+    width: 66px;
     height: 100%;
     font-weight: 600;
     flex: none;
