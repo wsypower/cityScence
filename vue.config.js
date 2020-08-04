@@ -12,7 +12,7 @@ const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
 const port = process.env.port || process.env.npm_config_port || 9527; // dev port
 
 module.exports = {
-  publicPath: "/",
+  publicPath: "/dist/",
   outputDir: "dist",
   assetsDir: "static",
   lintOnSave: process.env.NODE_ENV === "development",
